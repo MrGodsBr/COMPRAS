@@ -14,19 +14,15 @@
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; display: flex; justify-content: center; }
         .app-container { background-color: var(--card-bg); width: 100%; max-width: 420px; min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); padding-bottom: 80px; }
         
-        /* NOVO ESTILO DO CABEÇALHO - CENTRALIZADO E GRANDE */
         .header { 
             display: flex; justify-content: center; align-items: center; 
             padding: 20px; border-bottom: 1px solid var(--border); 
-            font-size: 24px; font-weight: 800; /* Tamanho maior e fonte mais grossa */
+            font-size: 24px; font-weight: 800;
             position: relative;
             color: var(--primary-black);
             text-align: center;
         }
-        .header span { 
-            position: absolute; right: 20px; 
-            color: var(--text-muted); cursor: pointer; font-weight: normal; font-size: 20px; 
-        }
+        .header span { position: absolute; right: 20px; color: var(--text-muted); cursor: pointer; font-weight: normal; font-size: 20px; }
         
         .content { padding: 20px; }
         .budget-row { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 14px; margin-bottom: 15px; }
@@ -42,6 +38,7 @@
         .btn { width: 100%; padding: 16px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; border: none; display: flex; justify-content: center; align-items: center; gap: 10px; box-sizing: border-box; margin-bottom: 10px; }
         .btn-black { background-color: var(--primary-black); color: white; }
         .btn-light { background-color: var(--primary-light); color: var(--text-main); border: 1px solid var(--border); }
+        .btn-outline { background-color: transparent; border: 2px solid var(--primary-black); color: var(--primary-black); }
         .btn-text { background-color: transparent; color: var(--text-muted); font-size: 14px; }
         
         #cameraInput, #receiptInput { display: none; }
@@ -101,7 +98,6 @@
 <body>
 
 <div class="app-container">
-    <!-- TÍTULO CENTRALIZADO E GRANDE -->
     <div class="header">
         MINHAS COMPRAS 🛒
         <span>×</span>
@@ -166,20 +162,27 @@
     </div>
 </div>
 
-<!-- Modal Solicitar Cupom -->
-<div class="modal-overlay" id="modalRequestReceipt">
+<!-- Modal Opções de Finalização (Compartilhar e Conferir Cupom) -->
+<div class="modal-overlay" id="modalCheckoutOptions">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>Conferência de Preços</h3>
-            <p>Tire uma foto do cupom fiscal do mercado para checarmos se cobraram os valores corretos.</p>
-            <span class="modal-close" onclick="closeModalReceipt()">×</span>
+            <h3>Finalizar Compra</h3>
+            <p>Escolha o que deseja fazer com a sua lista:</p>
+            <span class="modal-close" onclick="closeCheckoutOptions()">×</span>
         </div>
-        <label for="receiptInput" class="btn btn-black">🧾 Fotografar Cupom Fiscal</label>
+        
+        <button class="btn btn-black" onclick="shareList()">📤 Compartilhar Lista no WhatsApp</button>
+        
+        <div style="text-align: center; margin: 20px 0; color: var(--text-muted); font-size: 14px;">ou faça a conferência de preços</div>
+
+        <label for="receiptInput" class="btn btn-outline">🧾 Fotografar Cupom Fiscal</label>
         <input type="file" id="receiptInput" accept="image/*" capture="environment">
+        
         <div id="receiptStatus" style="text-align:center; margin-top:15px; font-weight:bold; display:none;">
             <div class="loader" style="display:inline-block;"></div> Analisando cupom fiscal... isso pode levar um minuto.
         </div>
-        <button class="btn btn-text" onclick="closeModalReceipt()">Pular etapa</button>
+        
+        <button class="btn btn-text" onclick="closeCheckoutOptions()" style="margin-top: 15px;">Voltar</button>
     </div>
 </div>
 
@@ -386,23 +389,54 @@
         });
     });
 
+    // --- OPÇÕES DE FINALIZAÇÃO DA COMPRA ---
     function startCheckout() {
         if(cart.length === 0) { alert("O seu carrinho está vazio."); return; }
-        document.getElementById('modalRequestReceipt').classList.add('active');
+        document.getElementById('modalCheckoutOptions').classList.add('active');
         document.getElementById('receiptStatus').style.display = 'none';
     }
 
-    function closeModalReceipt() { document.getElementById('modalRequestReceipt').classList.remove('active'); }
+    function closeCheckoutOptions() {
+        document.getElementById('modalCheckoutOptions').classList.remove('active');
+    }
 
+    // 1. Geração de texto e Compartilhamento
+    function shareList() {
+        let totalSpent = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+        
+        let text = "🛒 *MINHAS COMPRAS* 🛒\n\n";
+        cart.forEach(item => {
+            text += `▪ ${item.qty}x ${item.name} - R$ ${formatMoney(item.price * item.qty)}\n`;
+        });
+        
+        text += `\n💰 *Total da compra:* R$ ${formatMoney(totalSpent)}`;
+        
+        // Se o navegador do telemóvel tiver suporte para partilha nativa (WhatsApp, Telegram, etc)
+        if (navigator.share) {
+            navigator.share({
+                title: 'Minhas Compras',
+                text: text
+            }).catch(console.error);
+        } else {
+            // Se estiver num PC ou browser sem suporte, copia para a área de transferência
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Lista copiada! Cole no WhatsApp ou onde desejar.");
+            }).catch(err => {
+                alert("Erro ao copiar a lista.");
+            });
+        }
+    }
+
+    // 2. Conferência do Cupom Fiscal
     const receiptInput = document.getElementById('receiptInput');
     receiptInput.addEventListener('change', function(e) {
         const file = e.target.files[0]; if (!file) return;
         document.getElementById('receiptStatus').style.display = 'block';
         processImageForOCR(file, function(processedImage) {
             Tesseract.recognize(processedImage, 'por').then(({ data: { text } }) => {
-                document.getElementById('modalRequestReceipt').classList.remove('active');
+                document.getElementById('modalCheckoutOptions').classList.remove('active');
                 analyzeReceipt(text); receiptInput.value = ""; 
-            }).catch(err => { alert("Erro ao analisar cupom."); closeModalReceipt(); });
+            }).catch(err => { alert("Erro ao analisar cupom."); closeCheckoutOptions(); });
         });
     });
 
