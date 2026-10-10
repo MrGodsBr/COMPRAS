@@ -106,7 +106,7 @@
             </div>
         </div>
 
-        <label for="cameraInput" class="btn btn-black">📷 Escanear preço</label>
+        <label for="cameraInput" class="btn btn-black">📷 Escanear preço/produto</label>
         <input type="file" id="cameraInput" accept="image/*" capture="environment">
 
         <button class="btn btn-light" onclick="openModal('', '', 1, true)">+ Adicionar manualmente</button>
@@ -157,10 +157,8 @@
             <p>Tire uma foto do cupom fiscal do mercado para checarmos se cobraram os valores corretos.</p>
             <span class="modal-close" onclick="closeModalReceipt()">×</span>
         </div>
-        
         <label for="receiptInput" class="btn btn-black">🧾 Fotografar Cupom Fiscal</label>
         <input type="file" id="receiptInput" accept="image/*" capture="environment">
-        
         <div id="receiptStatus" style="text-align:center; margin-top:15px; font-weight:bold; display:none;">
             <div class="loader" style="display:inline-block;"></div> Analisando cupom fiscal... isso pode levar um minuto.
         </div>
@@ -176,9 +174,7 @@
             <p>Veja se os preços cobrados batem com os da prateleira.</p>
             <span class="modal-close" onclick="document.getElementById('modalCheckoutResults').classList.remove('active')">×</span>
         </div>
-        <div id="resultsList" style="margin-bottom: 20px;">
-            <!-- Resultados injetados aqui via JS -->
-        </div>
+        <div id="resultsList" style="margin-bottom: 20px;"></div>
         <button class="btn btn-black" onclick="document.getElementById('modalCheckoutResults').classList.remove('active')">Concluir</button>
     </div>
 </div>
@@ -227,7 +223,6 @@
         cart.forEach((item, index) => {
             let li = document.createElement('li'); li.className = 'cart-item';
             let imageHTML = item.image ? `<img src="${item.image}" alt="Produto" onclick="openImageModal('${item.image}')">` : `🛒`;
-
             li.innerHTML = `
                 <div class="cart-item-img">${imageHTML}</div>
                 <div class="cart-item-details">
@@ -254,7 +249,7 @@
         document.getElementById('modalQty').value = qty;
         document.getElementById('modalName').classList.remove('loading-input');
         document.getElementById('modalLoader').style.display = 'none';
-        document.getElementById('modalSubtitle').innerText = "Confirme os dados lidos da etiqueta. Ajuste se precisar.";
+        document.getElementById('modalSubtitle').innerText = "Confirme os dados lidos. Ajuste se precisar.";
         document.getElementById('modalSubtitle').className = "";
         document.getElementById('btnAddCart').disabled = false;
         calcModalSubtotal(); document.getElementById('modalAdd').classList.add('active');
@@ -282,7 +277,6 @@
     function openImageModal(imgSrc) { document.getElementById('fullSizeImage').src = imgSrc; document.getElementById('modalImage').classList.add('active'); }
     function closeImageModal() { document.getElementById('modalImage').classList.remove('active'); }
 
-    // Geração de miniatura e processamento OCR (Scanner prateleira)
     function generateThumbnail(file, callback) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -293,8 +287,7 @@
                 else { if (height > MAX_WIDTH) { width *= MAX_WIDTH / height; height = MAX_WIDTH; } }
                 canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height);
                 callback(canvas.toDataURL('image/jpeg', 0.7)); 
-            };
-            img.src = e.target.result;
+            }; img.src = e.target.result;
         }; reader.readAsDataURL(file);
     }
 
@@ -314,8 +307,7 @@
                 }
                 ctx.putImageData(imageData, 0, 0);
                 callback(canvas.toDataURL('image/jpeg', 0.8));
-            };
-            img.src = e.target.result;
+            }; img.src = e.target.result;
         }; reader.readAsDataURL(file);
     }
 
@@ -332,24 +324,36 @@
         document.getElementById('modalLoader').style.display = 'inline-block';
         
         let subtitle = document.getElementById('modalSubtitle');
-        subtitle.innerText = "A IA está lendo a etiqueta...";
+        subtitle.innerText = "A IA está lendo a embalagem/etiqueta...";
         subtitle.className = ""; document.getElementById('btnAddCart').disabled = true;
 
         processImageForOCR(file, function(processedImage) {
             document.getElementById('modalName').value = "Extraindo dados com IA...";
             Tesseract.recognize(processedImage, 'por').then(({ data: { text } }) => {
+                
+                // Busca de preço
                 const priceRegex = /\b\d{1,4}[.,]\d{2}\b/g; const matches = text.match(priceRegex);
                 let finalPrice = '';
                 if (matches && matches.length > 0) {
                     let prices = matches.map(p => parseFloat(p.replace(',', '.')));
                     finalPrice = Math.min(...prices).toFixed(2);
                 }
-                let lines = text.split('\n'); let bestName = "";
+
+                // NOVO ALGORITMO DE NOME: Junta as primeiras linhas úteis encontradas
+                let lines = text.split('\n');
+                let validLines = [];
                 for(let line of lines) {
-                    let cleanLine = line.replace(/[^a-zA-ZÀ-ÿ\s]/g, '').trim();
-                    if(cleanLine.length > 6 && cleanLine.split(' ').length >= 2) { bestName = cleanLine.toUpperCase(); break; }
+                    // Mantém letras e números (para pegar gramas ex: 200g)
+                    let cleanLine = line.replace(/[^a-zA-ZÀ-ÿ0-9\s]/g, '').trim();
+                    // Ignora linhas muito pequenas e avisos nutricionais
+                    if(cleanLine.length >= 3 && !cleanLine.toLowerCase().includes('alto em') && !cleanLine.toLowerCase().includes('gordura')) { 
+                        validLines.push(cleanLine); 
+                    }
                 }
-                if (!bestName) bestName = "PRODUTO LIDO";
+                
+                // Junta as 2 a 3 primeiras frases (ex: TIROL + Creme de Leite)
+                let bestName = validLines.slice(0, 3).join(' ').toUpperCase();
+                if (!bestName || bestName.length < 3) bestName = "PRODUTO LIDO";
                 
                 document.getElementById('modalName').value = bestName;
                 document.getElementById('modalName').classList.remove('loading-input');
@@ -357,7 +361,7 @@
                 document.getElementById('modalLoader').style.display = 'none';
                 document.getElementById('btnAddCart').disabled = false;
                 
-                if (finalPrice === '') { subtitle.innerText = "Digite o preço manualmente."; subtitle.className = "highlight-msg"; document.getElementById('modalPrice').focus(); } 
+                if (finalPrice === '') { subtitle.innerText = "Nome encontrado! Digite o preço manualmente."; subtitle.className = "highlight-msg"; document.getElementById('modalPrice').focus(); } 
                 else { subtitle.innerText = "Leitura concluída!"; }
                 calcModalSubtotal(); cameraInput.value = ""; 
 
@@ -370,113 +374,66 @@
         });
     });
 
-    // --- LÓGICA DE CONFERÊNCIA DE CUPOM FISCAL ---
     function startCheckout() {
         if(cart.length === 0) { alert("O seu carrinho está vazio."); return; }
         document.getElementById('modalRequestReceipt').classList.add('active');
         document.getElementById('receiptStatus').style.display = 'none';
     }
 
-    function closeModalReceipt() {
-        document.getElementById('modalRequestReceipt').classList.remove('active');
-    }
+    function closeModalReceipt() { document.getElementById('modalRequestReceipt').classList.remove('active'); }
 
     const receiptInput = document.getElementById('receiptInput');
     receiptInput.addEventListener('change', function(e) {
         const file = e.target.files[0]; if (!file) return;
-        
         document.getElementById('receiptStatus').style.display = 'block';
-
         processImageForOCR(file, function(processedImage) {
             Tesseract.recognize(processedImage, 'por').then(({ data: { text } }) => {
                 document.getElementById('modalRequestReceipt').classList.remove('active');
-                analyzeReceipt(text);
-                receiptInput.value = ""; 
-            }).catch(err => {
-                alert("Erro ao analisar cupom. O papel pode estar muito amassado.");
-                closeModalReceipt();
-            });
+                analyzeReceipt(text); receiptInput.value = ""; 
+            }).catch(err => { alert("Erro ao analisar cupom."); closeModalReceipt(); });
         });
     });
 
-    // Função que cruza os dados do carrinho com o que a IA leu na nota
     function analyzeReceipt(ocrText) {
-        const resultsList = document.getElementById('resultsList');
-        resultsList.innerHTML = '';
+        const resultsList = document.getElementById('resultsList'); resultsList.innerHTML = '';
         const lines = ocrText.toUpperCase().split('\n');
-
-        // Extrai possíveis itens da nota (Nome e Preço)
-        let receiptItems = [];
-        const priceRegex = /\d+[.,]\d{2}/;
+        let receiptItems = []; const priceRegex = /\d+[.,]\d{2}/;
 
         lines.forEach(line => {
             const match = line.match(priceRegex);
             if (match) {
                 let priceFound = parseFloat(match[0].replace(',', '.'));
                 let nameFound = line.replace(priceRegex, '').replace(/[^A-ZÀ-Ÿ\s]/g, '').trim();
-                if(nameFound.length > 3) {
-                    receiptItems.push({ name: nameFound, price: priceFound, used: false });
-                }
+                if(nameFound.length > 3) { receiptItems.push({ name: nameFound, price: priceFound, used: false }); }
             }
         });
 
-        // Compara o Carrinho com a Nota
         cart.forEach(cartItem => {
             let matchFound = null;
             let cartNameWords = cartItem.name.split(' ').filter(w => w.length > 2);
-
-            // Tenta achar na nota um produto que tenha palavras parecidas
             for (let rItem of receiptItems) {
                 if(rItem.used) continue;
                 let matchesWord = cartNameWords.some(word => rItem.name.includes(word));
                 if (matchesWord || (cartItem.price === rItem.price)) {
-                    matchFound = rItem;
-                    rItem.used = true;
-                    break;
+                    matchFound = rItem; rItem.used = true; break;
                 }
             }
 
             let div = document.createElement('div');
-            
             if (matchFound) {
                 if (cartItem.price === matchFound.price) {
-                    // Preço Bateu
                     div.className = 'check-item success';
-                    div.innerHTML = `
-                        <div class="check-title">${cartItem.name}</div>
-                        <div class="check-details">
-                            <span>Prateleira: R$ ${formatMoney(cartItem.price)}</span>
-                            <span>Caixa: R$ ${formatMoney(matchFound.price)}</span>
-                        </div>
-                        <div class="check-status">✔ Preço Correto</div>`;
+                    div.innerHTML = `<div class="check-title">${cartItem.name}</div><div class="check-details"><span>Prateleira: R$ ${formatMoney(cartItem.price)}</span><span>Caixa: R$ ${formatMoney(matchFound.price)}</span></div><div class="check-status">✔ Preço Correto</div>`;
                 } else if (matchFound.price > cartItem.price) {
-                    // Cobraram mais caro
                     div.className = 'check-item error';
-                    div.innerHTML = `
-                        <div class="check-title">${cartItem.name}</div>
-                        <div class="check-details">
-                            <span>Prateleira: R$ ${formatMoney(cartItem.price)}</span>
-                            <span>Caixa: R$ ${formatMoney(matchFound.price)}</span>
-                        </div>
-                        <div class="check-status">❌ Cobraram R$ ${formatMoney(matchFound.price - cartItem.price)} a mais!</div>`;
+                    div.innerHTML = `<div class="check-title">${cartItem.name}</div><div class="check-details"><span>Prateleira: R$ ${formatMoney(cartItem.price)}</span><span>Caixa: R$ ${formatMoney(matchFound.price)}</span></div><div class="check-status">❌ Cobraram R$ ${formatMoney(matchFound.price - cartItem.price)} a mais!</div>`;
                 } else {
-                    // Cobraram mais barato
                     div.className = 'check-item warning';
-                    div.innerHTML = `
-                        <div class="check-title">${cartItem.name}</div>
-                        <div class="check-details">
-                            <span>Prateleira: R$ ${formatMoney(cartItem.price)}</span>
-                            <span>Caixa: R$ ${formatMoney(matchFound.price)}</span>
-                        </div>
-                        <div class="check-status">⚠️ Passou mais barato no caixa.</div>`;
+                    div.innerHTML = `<div class="check-title">${cartItem.name}</div><div class="check-details"><span>Prateleira: R$ ${formatMoney(cartItem.price)}</span><span>Caixa: R$ ${formatMoney(matchFound.price)}</span></div><div class="check-status">⚠️ Passou mais barato no caixa.</div>`;
                 }
             } else {
-                // Não achou na nota (IA falhou ou não passou)
                 div.className = 'check-item warning';
-                div.innerHTML = `
-                    <div class="check-title">${cartItem.name}</div>
-                    <div class="check-details"><span>Anotado: R$ ${formatMoney(cartItem.price)}</span></div>
-                    <div class="check-status">❓ Não foi possível ler este item no cupom.</div>`;
+                div.innerHTML = `<div class="check-title">${cartItem.name}</div><div class="check-details"><span>Anotado: R$ ${formatMoney(cartItem.price)}</span></div><div class="check-status">❓ Não lido no cupom.</div>`;
             }
             resultsList.appendChild(div);
         });
