@@ -70,14 +70,13 @@
         .cart-list { list-style: none; padding: 0; margin: 0; }
         .cart-item { display: flex; padding: 15px 0; border-bottom: 1px solid var(--border); }
         
-        /* Ajuste na imagem do carrinho para receber a foto */
         .cart-item-img { 
             width: 50px; height: 50px; background-color: var(--primary-light); 
             border-radius: 8px; margin-right: 15px; display: flex; 
             align-items: center; justify-content: center; font-size: 20px; 
             overflow: hidden; flex-shrink: 0; border: 1px solid var(--border);
         }
-        .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+        .cart-item-img img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
         
         .cart-item-details { flex-grow: 1; }
         .cart-item-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: flex; justify-content: space-between; }
@@ -85,6 +84,7 @@
         .cart-controls { display: flex; align-items: center; gap: 15px; color: var(--text-muted); }
         .control-btn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; background: white; color: var(--text-main); }
         
+        /* Modal Adicionar Produto */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: flex-end; z-index: 1000; }
         .modal-content { background: white; width: 100%; max-width: 420px; border-radius: 20px 20px 0 0; padding: 20px; box-sizing: border-box; transform: translateY(100%); transition: transform 0.3s ease; }
         .modal-overlay.active { display: flex; }
@@ -109,6 +109,25 @@
         .loader { display: inline-block; width: 16px; height: 16px; border: 3px solid rgba(0,0,0,0.1); border-radius: 50%; border-top-color: var(--primary-black); animation: spin 1s ease-in-out infinite; margin-right: 8px; vertical-align: middle; display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .highlight-msg { color: #ff9500; font-weight: bold; }
+
+        /* Modal Visualizar Imagem em Ecrã Inteiro */
+        .image-modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.9); display: none; 
+            justify-content: center; align-items: center; z-index: 2000;
+        }
+        .image-modal-overlay.active { display: flex; }
+        .image-modal-content { position: relative; max-width: 90%; max-height: 90%; }
+        .image-modal-content img {
+            width: 100%; height: auto; max-height: 85vh; 
+            border-radius: 10px; object-fit: contain;
+        }
+        .image-modal-close {
+            position: absolute; top: -15px; right: -15px;
+            background: white; color: black; width: 32px; height: 32px;
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-weight: bold; cursor: pointer; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        }
     </style>
 </head>
 <body>
@@ -135,7 +154,6 @@
         <label for="cameraInput" class="btn btn-black">📷 Escanear preço</label>
         <input type="file" id="cameraInput" accept="image/*" capture="environment">
 
-        <!-- Adicionado flag 'true' para identificar que foi manual -->
         <button class="btn btn-light" onclick="openModal('', '', 1, true)">+ Adicionar manualmente</button>
 
         <h3 class="cart-title">Seu carrinho</h3>
@@ -148,6 +166,7 @@
     </div>
 </div>
 
+<!-- Modal Adicionar Produto -->
 <div class="modal-overlay" id="modalAdd">
     <div class="modal-content">
         <div class="modal-header">
@@ -167,10 +186,18 @@
     </div>
 </div>
 
+<!-- Modal Visualizar Imagem -->
+<div class="image-modal-overlay" id="modalImage" onclick="closeImageModal()">
+    <div class="image-modal-content" onclick="event.stopPropagation()">
+        <div class="image-modal-close" onclick="closeImageModal()">×</div>
+        <img id="fullSizeImage" src="" alt="Imagem do Produto Expandida">
+    </div>
+</div>
+
 <script>
     let budget = 300.00;
     let cart = [];
-    let currentCapturedImage = null; // Variável para guardar a foto atual
+    let currentCapturedImage = null;
 
     function formatMoney(value) { return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 
@@ -209,8 +236,8 @@
         cart.forEach((item, index) => {
             let li = document.createElement('li'); li.className = 'cart-item';
             
-            // Verifica se tem imagem. Se tiver, mostra a foto, senão mostra o emoji de carrinho
-            let imageHTML = item.image ? `<img src="${item.image}" alt="Produto">` : `🛒`;
+            // Adicionado evento onclick para abrir a imagem
+            let imageHTML = item.image ? `<img src="${item.image}" alt="Produto" onclick="openImageModal('${item.image}')">` : `🛒`;
 
             li.innerHTML = `
                 <div class="cart-item-img">${imageHTML}</div>
@@ -232,7 +259,7 @@
     function removeItem(index) { cart.splice(index, 1); updateUI(); }
 
     function openModal(name = '', price = '', qty = 1, isManual = false) {
-        if (isManual) currentCapturedImage = null; // Limpa a foto se clicar em Adicionar Manualmente
+        if (isManual) currentCapturedImage = null; 
         
         document.getElementById('modalName').value = name;
         document.getElementById('modalPrice').value = price;
@@ -246,6 +273,7 @@
     }
 
     function closeModal() { document.getElementById('modalAdd').classList.remove('active'); }
+    
     function calcModalSubtotal() {
         let price = parseFloat(document.getElementById('modalPrice').value) || 0;
         let qty = parseInt(document.getElementById('modalQty').value) || 0;
@@ -258,7 +286,6 @@
         let price = parseFloat(document.getElementById('modalPrice').value);
         let qty = parseInt(document.getElementById('modalQty').value);
         if (name && price > 0 && qty > 0) { 
-            // Adiciona o produto ao carrinho, passando a imagem que foi capturada
             cart.push({ name, price, qty, image: currentCapturedImage }); 
             closeModal(); 
             updateUI(); 
@@ -266,7 +293,16 @@
         else { alert('Preencha o nome e o preço (maior que zero) antes de adicionar.'); }
     }
 
-    // Função para criar uma miniatura colorida para mostrar no carrinho
+    // Funções para Visualizar a Foto em Ecrã Inteiro
+    function openImageModal(imgSrc) {
+        document.getElementById('fullSizeImage').src = imgSrc;
+        document.getElementById('modalImage').classList.add('active');
+    }
+    function closeImageModal() {
+        document.getElementById('modalImage').classList.remove('active');
+    }
+
+    // Criar a foto com qualidade suficiente para ver em ecrã inteiro (aumentado para 600px)
     function generateThumbnail(file, callback) {
         const reader = new FileReader();
         reader.onload = function(event) {
@@ -274,20 +310,19 @@
             img.onload = function() {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                const MAX_WIDTH = 200; // Tamanho pequeno para o carrinho
+                const MAX_WIDTH = 600; // Tamanho ideal para telemóveis
                 let width = img.width; let height = img.height;
                 if (width > height) { if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } } 
                 else { if (height > MAX_WIDTH) { width *= MAX_WIDTH / height; height = MAX_WIDTH; } }
                 canvas.width = width; canvas.height = height;
                 ctx.drawImage(img, 0, 0, width, height);
-                callback(canvas.toDataURL('image/jpeg', 0.6));
+                callback(canvas.toDataURL('image/jpeg', 0.7)); // Qualidade de 70%
             };
             img.src = event.target.result;
         };
         reader.readAsDataURL(file);
     }
 
-    // Processar imagem como um "Scanner" preto e branco só para a IA ler melhor
     function processImageForOCR(file, callback) {
         const reader = new FileReader();
         reader.onload = function(event) {
@@ -321,7 +356,6 @@
         const file = e.target.files[0];
         if (!file) return;
 
-        // 1. Gera e guarda a miniatura para o carrinho
         generateThumbnail(file, function(thumb) {
             currentCapturedImage = thumb;
         });
@@ -337,7 +371,6 @@
         subtitle.innerText = "A IA está limpando a imagem e lendo a etiqueta...";
         subtitle.className = ""; document.getElementById('btnAddCart').disabled = true;
 
-        // 2. Prepara a imagem para a IA
         processImageForOCR(file, function(processedImage) {
             document.getElementById('modalName').value = "Extraindo dados com IA...";
 
