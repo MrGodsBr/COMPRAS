@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sua Compra</title>
+    <title>MINHAS COMPRAS 🛒</title>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
     <style>
         :root {
@@ -13,8 +13,21 @@
 
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; display: flex; justify-content: center; }
         .app-container { background-color: var(--card-bg); width: 100%; max-width: 420px; min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); padding-bottom: 80px; }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid var(--border); font-size: 18px; font-weight: 600; }
-        .header span { color: var(--text-muted); cursor: pointer; font-weight: normal; }
+        
+        /* NOVO ESTILO DO CABEÇALHO - CENTRALIZADO E GRANDE */
+        .header { 
+            display: flex; justify-content: center; align-items: center; 
+            padding: 20px; border-bottom: 1px solid var(--border); 
+            font-size: 24px; font-weight: 800; /* Tamanho maior e fonte mais grossa */
+            position: relative;
+            color: var(--primary-black);
+            text-align: center;
+        }
+        .header span { 
+            position: absolute; right: 20px; 
+            color: var(--text-muted); cursor: pointer; font-weight: normal; font-size: 20px; 
+        }
+        
         .content { padding: 20px; }
         .budget-row { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 14px; margin-bottom: 15px; }
         .budget-row .value { color: var(--text-main); font-weight: 500; cursor: pointer; }
@@ -88,7 +101,11 @@
 <body>
 
 <div class="app-container">
-    <div class="header">Sua compra <span>×</span></div>
+    <!-- TÍTULO CENTRALIZADO E GRANDE -->
+    <div class="header">
+        MINHAS COMPRAS 🛒
+        <span>×</span>
+    </div>
 
     <div class="content">
         <div class="budget-row">
@@ -331,7 +348,6 @@
             document.getElementById('modalName').value = "Extraindo dados com IA...";
             Tesseract.recognize(processedImage, 'por').then(({ data: { text } }) => {
                 
-                // Busca de preço
                 const priceRegex = /\b\d{1,4}[.,]\d{2}\b/g; const matches = text.match(priceRegex);
                 let finalPrice = '';
                 if (matches && matches.length > 0) {
@@ -339,19 +355,15 @@
                     finalPrice = Math.min(...prices).toFixed(2);
                 }
 
-                // NOVO ALGORITMO DE NOME: Junta as primeiras linhas úteis encontradas
                 let lines = text.split('\n');
                 let validLines = [];
                 for(let line of lines) {
-                    // Mantém letras e números (para pegar gramas ex: 200g)
                     let cleanLine = line.replace(/[^a-zA-ZÀ-ÿ0-9\s]/g, '').trim();
-                    // Ignora linhas muito pequenas e avisos nutricionais
                     if(cleanLine.length >= 3 && !cleanLine.toLowerCase().includes('alto em') && !cleanLine.toLowerCase().includes('gordura')) { 
                         validLines.push(cleanLine); 
                     }
                 }
                 
-                // Junta as 2 a 3 primeiras frases (ex: TIROL + Creme de Leite)
                 let bestName = validLines.slice(0, 3).join(' ').toUpperCase();
                 if (!bestName || bestName.length < 3) bestName = "PRODUTO LIDO";
                 
