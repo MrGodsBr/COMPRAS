@@ -5,234 +5,179 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>MINHAS COMPRAS 2.0</title>
+<title>MINHAS COMPRAS 2.1</title>
 <style>
-:root {
-  --bg:#f3f4f6;
-  --white:#fff;
-  --ink:#171717;
-  --muted:#737780;
-  --line:#e5e7eb;
-  --green:#16a34a;
-  --red:#dc2626;
-  --orange:#d97706;
+:root{
+ --bg:#f3f4f6;--white:#fff;--ink:#171717;
+ --muted:#737780;--line:#e5e7eb;
+ --green:#16a34a;--red:#dc2626;
 }
 *{box-sizing:border-box}
 body{
-  margin:0;
-  background:var(--bg);
-  color:var(--ink);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ margin:0;background:var(--bg);color:var(--ink);
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
 .app{
-  max-width:480px;
-  margin:auto;
-  min-height:100dvh;
-  background:white;
-  padding-bottom:90px;
+ max-width:480px;margin:auto;min-height:100dvh;
+ background:white;padding-bottom:90px;
 }
 header{
-  padding:22px 20px 15px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid var(--line);
+ padding:22px 20px 15px;display:flex;
+ justify-content:space-between;align-items:center;
+ border-bottom:1px solid var(--line);
 }
 header strong{font-size:21px}
 header small{display:block;color:var(--muted);margin-top:4px}
 main{padding:20px}
 .card{
-  background:#f6f7f9;
-  border-radius:18px;
-  padding:20px;
-  margin-bottom:18px;
+ background:#f6f7f9;border-radius:18px;
+ padding:20px;margin-bottom:18px;
 }
 .row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px;
 }
 .muted{color:var(--muted);font-size:13px}
 .big{font-size:34px;font-weight:800;margin:12px 0}
 .progress{
-  height:9px;
-  background:#e2e5e9;
-  border-radius:20px;
-  overflow:hidden;
-  margin:16px 0;
+ height:9px;background:#e2e5e9;border-radius:20px;
+ overflow:hidden;margin:16px 0;
 }
 #bar{
-  width:0;
-  height:100%;
-  background:var(--green);
-  transition:.3s;
+ width:0;height:100%;background:var(--green);
+ transition:.3s;
 }
-button{
-  cursor:pointer;
-  font:inherit;
-}
+button{cursor:pointer;font:inherit}
 .btn{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:8px;
-  width:100%;
-  padding:15px;
-  border-radius:12px;
-  border:0;
-  font-weight:700;
-  margin:10px 0;
+ display:flex;justify-content:center;align-items:center;
+ gap:8px;width:100%;padding:15px;border-radius:12px;
+ border:0;font-weight:700;margin:10px 0;
 }
 .dark{background:#111;color:white}
 .light{background:#f2f3f5;color:#111}
 .outline{background:white;border:1px solid #ddd}
 .danger{color:var(--red)}
 .green{color:var(--green)}
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-.grid .btn{
-  min-height:85px;
-  flex-direction:column;
-}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid .btn{min-height:85px;flex-direction:column}
 h3{font-size:17px;margin:24px 0 12px}
 .item{
-  display:flex;
-  gap:12px;
-  align-items:center;
-  padding:14px 0;
-  border-bottom:1px solid var(--line);
+ display:flex;gap:12px;align-items:center;
+ padding:14px 0;border-bottom:1px solid var(--line);
 }
 .thumb{
-  width:55px;
-  height:55px;
-  background:#f2f3f5;
-  border-radius:10px;
-  display:grid;
-  place-items:center;
-  flex-shrink:0;
-  overflow:hidden;
-  font-size:23px;
+ width:55px;height:55px;background:#f2f3f5;
+ border-radius:10px;display:grid;place-items:center;
+ flex-shrink:0;overflow:hidden;font-size:23px;
+ border:0;padding:0;
 }
-.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb img{
+ width:100%;height:100%;object-fit:cover;
+ cursor:zoom-in;
+}
 .info{flex:1;min-width:0}
 .info strong{
-  display:block;
-  font-size:14px;
-  overflow-wrap:anywhere;
+ display:block;font-size:14px;overflow-wrap:anywhere;
 }
-.info small{display:block;color:var(--muted);margin-top:5px}
+.info small{
+ display:block;color:var(--muted);margin-top:5px;
+}
 .controls{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  margin-top:9px;
+ display:flex;gap:8px;align-items:center;margin-top:9px;
 }
 .mini{
-  background:#f2f3f5;
-  border:0;
-  border-radius:8px;
-  min-width:31px;
-  min-height:31px;
-  padding:5px;
+ background:#f2f3f5;border:0;border-radius:8px;
+ min-width:31px;min-height:31px;padding:5px;
 }
 .amount{font-weight:700;font-size:14px}
 nav{
-  position:fixed;
-  bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-  max-width:480px;
-  width:100%;
-  display:flex;
-  background:white;
-  border-top:1px solid var(--line);
-  padding:8px 0 max(8px,env(safe-area-inset-bottom));
-  z-index:5;
+ position:fixed;bottom:0;left:50%;
+ transform:translateX(-50%);max-width:480px;width:100%;
+ display:flex;background:white;border-top:1px solid var(--line);
+ padding:8px 0 max(8px,env(safe-area-inset-bottom));
+ z-index:5;
 }
 nav button{
-  flex:1;
-  border:0;
-  background:none;
-  color:var(--muted);
-  padding:8px;
-  font-size:12px;
+ flex:1;border:0;background:none;
+ color:var(--muted);padding:8px;font-size:12px;
 }
 nav button.active{color:#111;font-weight:800}
 .page{display:none}
 .page.active{display:block}
 .overlay{
-  position:fixed;
-  inset:0;
-  background:#0009;
-  display:none;
-  align-items:flex-end;
-  justify-content:center;
-  z-index:20;
+ position:fixed;inset:0;background:#0009;
+ display:none;align-items:flex-end;justify-content:center;
+ z-index:20;
 }
 .overlay.active{display:flex}
 .modal{
-  width:100%;
-  max-width:480px;
-  max-height:92dvh;
-  overflow:auto;
-  background:white;
-  padding:22px;
-  border-radius:22px 22px 0 0;
+ width:100%;max-width:480px;max-height:92dvh;
+ overflow:auto;background:white;padding:22px;
+ border-radius:22px 22px 0 0;
 }
 .modal h3{margin:0 0 20px}
 label{
-  display:block;
-  font-size:13px;
-  font-weight:600;
-  margin:13px 0 6px;
+ display:block;font-size:13px;font-weight:600;
+ margin:13px 0 6px;
 }
 input,select{
-  width:100%;
-  padding:13px;
-  border:1px solid #ddd;
-  border-radius:10px;
-  font:inherit;
-  background:#fafafa;
+ width:100%;padding:13px;border:1px solid #ddd;
+ border-radius:10px;font:inherit;background:#fafafa;
 }
 input[type=file]{display:none}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .notice{
-  padding:13px;
-  border-radius:10px;
-  background:#fff7e8;
-  font-size:13px;
-  line-height:1.5;
+ padding:13px;border-radius:10px;background:#fff7e8;
+ font-size:13px;line-height:1.5;
 }
 .result{
-  padding:13px;
-  margin:10px 0;
-  border-radius:10px;
-  background:#f6f7f9;
-  border-left:5px solid #eab308;
+ padding:13px;margin:10px 0;border-radius:10px;
+ background:#f6f7f9;border-left:5px solid #eab308;
 }
 .result.ok{border-color:var(--green)}
 .result.bad{border-color:var(--red)}
 .result small{display:block;margin-top:6px}
 .empty{
-  padding:30px 12px;
-  text-align:center;
-  color:var(--muted);
+ padding:30px 12px;text-align:center;color:var(--muted);
 }
 #photoPreview{
-  max-width:100%;
-  max-height:160px;
-  border-radius:10px;
-  display:none;
-  margin:10px auto;
+ max-width:100%;max-height:160px;
+ border-radius:10px;display:none;margin:10px auto;
 }
-.hidden{display:none!important}
+
+/* VISUALIZADOR DE FOTOS AMPLIADAS */
+.image-viewer{
+ position:fixed;inset:0;z-index:9999;
+ display:none;align-items:center;justify-content:center;
+ background:rgba(0,0,0,.96);
+ padding:20px;
+ padding-top:max(60px,env(safe-area-inset-top));
+ padding-bottom:max(30px,env(safe-area-inset-bottom));
+}
+.image-viewer.active{display:flex}
+.image-viewer img{
+ display:block;max-width:100%;max-height:100%;
+ width:auto;height:auto;object-fit:contain;
+ border-radius:8px;
+}
+.image-viewer-close{
+ position:absolute;
+ top:max(15px,env(safe-area-inset-top));
+ right:20px;width:42px;height:42px;
+ border:0;border-radius:50%;
+ background:white;color:#111;
+ font-size:26px;font-weight:bold;
+ display:grid;place-items:center;
+ z-index:2;
+}
+.image-viewer-hint{
+ position:absolute;bottom:max(12px,env(safe-area-inset-bottom));
+ color:#ddd;font-size:12px;text-align:center;
+}
 </style>
 </head>
 <body>
+
 <div class="app">
 <header>
  <div>
@@ -243,6 +188,7 @@ input[type=file]{display:none}
 </header>
 
 <main>
+
 <section id="home" class="page active">
  <div class="card">
   <div class="row">
@@ -259,8 +205,12 @@ input[type=file]{display:none}
  </div>
 
  <div class="grid">
-  <button class="btn dark" onclick="document.getElementById('camera').click()">📷<span>Escanear produto</span></button>
-  <button class="btn light" onclick="openProduct()">➕<span>Adicionar item</span></button>
+  <button class="btn dark" onclick="document.getElementById('camera').click()">
+   📷<span>Escanear produto</span>
+  </button>
+  <button class="btn light" onclick="openProduct()">
+   ➕<span>Adicionar item</span>
+  </button>
  </div>
  <input id="camera" type="file" accept="image/*" capture="environment">
 
@@ -269,6 +219,7 @@ input[type=file]{display:none}
   <span class="muted" id="count">0 produtos</span>
  </div>
  <div id="cart"></div>
+
  <button class="btn dark" onclick="checkout()">✔ Finalizar compra</button>
  <button class="btn light danger" onclick="clearCart()">🗑️ Esvaziar carrinho</button>
 </section>
@@ -294,9 +245,10 @@ input[type=file]{display:none}
  </div>
  <div class="card">
   <strong>Privacidade</strong>
-  <p class="muted">Não há conta, anúncios ou envio das compras a um servidor próprio. A biblioteca OCR é carregada de um serviço externo.</p>
+  <p class="muted">Não há conta ou envio das compras para um servidor próprio. A biblioteca OCR é carregada de um serviço externo.</p>
  </div>
 </section>
+
 </main>
 
 <nav>
@@ -306,6 +258,7 @@ input[type=file]{display:none}
 </nav>
 </div>
 
+<!-- MODAL DO PRODUTO -->
 <div class="overlay" id="productOverlay">
 <div class="modal">
  <div class="row">
@@ -340,6 +293,7 @@ input[type=file]{display:none}
 </div>
 </div>
 
+<!-- FINALIZAÇÃO -->
 <div class="overlay" id="checkoutOverlay">
 <div class="modal">
  <div class="row">
@@ -354,10 +308,11 @@ input[type=file]{display:none}
  <button class="btn outline" onclick="document.getElementById('receipt').click()">🧾 Fotografar cupom fiscal</button>
  <input id="receipt" type="file" accept="image/*" capture="environment">
  <button class="btn light" onclick="finishPurchase()">✔ Salvar compra no histórico</button>
- <p class="muted">A conferência automática é auxiliar. Confirme os dados antes de considerar uma cobrança incorreta.</p>
+ <p class="muted">A conferência automática é auxiliar. Confirme os valores no documento fiscal.</p>
 </div>
 </div>
 
+<!-- RESULTADOS DO CUPOM -->
 <div class="overlay" id="resultsOverlay">
 <div class="modal">
  <div class="row">
@@ -369,11 +324,18 @@ input[type=file]{display:none}
 </div>
 </div>
 
+<!-- NOVO VISUALIZADOR DE IMAGEM -->
+<div id="imageViewer" class="image-viewer" onclick="closeImageViewer()">
+ <button class="image-viewer-close" onclick="closeImageViewer()" aria-label="Fechar imagem">×</button>
+ <img id="expandedImage" alt="Imagem ampliada do produto" onclick="event.stopPropagation()">
+ <div class="image-viewer-hint">Toque fora da imagem para fechar</div>
+</div>
+
 <script>
 "use strict";
 
-const $ = id => document.getElementById(id);
-const money = n => new Intl.NumberFormat("pt-BR",{
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat("pt-BR",{
  style:"currency",currency:"BRL"
 }).format(Number(n)||0);
 
@@ -386,20 +348,16 @@ let db=null;
 let dbReady=false;
 
 function uid(){
- return crypto.randomUUID ? crypto.randomUUID() :
- String(Date.now())+"-"+Math.random().toString(36).slice(2);
+ return crypto.randomUUID?
+  crypto.randomUUID():
+  String(Date.now())+"-"+Math.random().toString(36).slice(2);
 }
 
 function cents(n){
  return Math.round((Number(n)+Number.EPSILON)*100);
 }
-
 function totalCart(){
  return cart.reduce((s,p)=>s+cents(p.price*p.qty),0)/100;
-}
-
-function totalOf(items){
- return items.reduce((s,p)=>s+cents(p.price*p.qty),0)/100;
 }
 
 function openDB(){
@@ -418,8 +376,7 @@ function openDB(){
 function dbAction(mode,action){
  return new Promise((resolve,reject)=>{
   const tx=db.transaction("data",mode);
-  const store=tx.objectStore("data");
-  const req=action(store);
+  const req=action(tx.objectStore("data"));
   req.onsuccess=()=>resolve(req.result);
   req.onerror=()=>reject(req.error);
  });
@@ -433,7 +390,7 @@ async function persist(){
   },"state"));
  }catch(e){
   console.error(e);
-  alert("Não foi possível salvar. Verifique o espaço disponível.");
+  alert("Não foi possível salvar os dados.");
  }
 }
 
@@ -449,7 +406,7 @@ async function init(){
   }
  }catch(e){
   console.error(e);
-  alert("Armazenamento indisponível. Os dados podem ser perdidos ao fechar.");
+  alert("Armazenamento indisponível.");
  }
  render();
 }
@@ -479,27 +436,56 @@ function el(tag,cls,text){
  return e;
 }
 
+/* AMPLIAR FOTO DO PRODUTO */
+function openImageViewer(image){
+ if(!image)return;
+ $("expandedImage").src=image;
+ $("imageViewer").classList.add("active");
+ document.body.style.overflow="hidden";
+}
+
+function closeImageViewer(){
+ $("imageViewer").classList.remove("active");
+ $("expandedImage").removeAttribute("src");
+ document.body.style.overflow="";
+}
+
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape")closeImageViewer();
+});
+
+/* CARRINHO */
 function renderCart(){
  const root=$("cart");
  root.replaceChildren();
+
  if(!cart.length){
   root.append(el("div","empty","Seu carrinho está vazio 🛒"));
   return;
  }
+
  cart.forEach(p=>{
   const line=el("div","item");
-  const thumb=el("div","thumb");
+  const thumb=el("button","thumb");
+  thumb.type="button";
+  thumb.title=p.image?"Toque para ampliar":"Sem foto";
+
   if(p.image){
    const img=el("img");
    img.src=p.image;
-   img.alt="Produto";
+   img.alt="Foto de "+p.name;
    thumb.append(img);
-  }else thumb.textContent="🛍️";
+   thumb.onclick=()=>openImageViewer(p.image);
+  }else{
+   thumb.textContent="🛍️";
+   thumb.disabled=true;
+  }
 
   const info=el("div","info");
   info.append(el("strong","",p.name));
   info.append(el("small","",
    money(p.price)+(p.type==="weight"?"/kg":" por unidade")));
+
   const controls=el("div","controls");
   const minus=el("button","mini","−");
   minus.onclick=()=>changeQty(p.id,-1);
@@ -510,6 +496,7 @@ function renderCart(){
   edit.onclick=()=>openProduct(p.id);
   const del=el("button","mini","🗑️");
   del.onclick=()=>removeProduct(p.id);
+
   controls.append(minus,qty,plus,edit,del);
   info.append(controls);
   line.append(thumb,info,el("span","amount",money(p.price*p.qty)));
@@ -522,7 +509,7 @@ function editBudget(){
  if(value===null)return;
  const n=Number(value.trim().replace(/\./g,"").replace(",","."));
  if(!Number.isFinite(n)||n<=0){
-  alert("Informe um orçamento válido maior que zero.");
+  alert("Informe um orçamento válido.");
   return;
  }
  budget=Math.round(n*100)/100;
@@ -546,7 +533,9 @@ function openProduct(id=null){
  $("productOverlay").classList.add("active");
 }
 
-function closeOverlay(id){$(id).classList.remove("active")}
+function closeOverlay(id){
+ $(id).classList.remove("active");
+}
 function closeProduct(){
  closeOverlay("productOverlay");
  editing=null;
@@ -555,7 +544,8 @@ function closeProduct(){
 
 function updateSubtotal(){
  const weight=$("type").value==="weight";
- $("priceLabel").textContent=weight?"Preço por kg (R$)":"Preço por unidade (R$)";
+ $("priceLabel").textContent=weight?
+  "Preço por kg (R$)":"Preço por unidade (R$)";
  $("qtyLabel").textContent=weight?"Peso em kg":"Quantidade";
  $("qty").step=weight?"0.001":"1";
  const price=Number($("price").value);
@@ -570,12 +560,14 @@ function saveProduct(){
  const price=Number($("price").value);
  const qty=Number($("qty").value);
  const type=$("type").value;
+
  if(!name||!Number.isFinite(price)||price<=0||
     !Number.isFinite(qty)||qty<=0||
     (type==="unit"&&!Number.isInteger(qty))){
   alert("Confira nome, preço e quantidade.");
   return;
  }
+
  const item={
   id:editing||uid(),
   name,
@@ -584,10 +576,12 @@ function saveProduct(){
   type,
   image:photo
  };
+
  if(editing){
   const i=cart.findIndex(p=>p.id===editing);
   if(i>=0)cart[i]=item;
  }else cart.push(item);
+
  closeProduct();
  persist();
  render();
@@ -673,10 +667,12 @@ function renderHistory(){
  const sum=history.reduce((s,h)=>s+(Number(h.total)||0),0);
  $("historicalTotal").textContent=money(sum);
  $("historicalCount").textContent=history.length+" compras concluídas";
+
  if(!history.length){
   root.append(el("div","empty","Nenhuma compra registrada."));
   return;
  }
+
  history.forEach(h=>{
   const box=el("div","card");
   box.append(el("strong","",money(h.total)));
@@ -718,23 +714,31 @@ $("backupInput").addEventListener("change",async e=>{
   await persist();
   render();
   alert("Backup importado.");
- }catch(err){alert("Arquivo de backup inválido.");}
+ }catch(err){
+  alert("Arquivo de backup inválido.");
+ }
  e.target.value="";
 });
 
-// OCR de imagens
+/* LEITURA DE IMAGENS */
 let ocrPromise=null;
 
 async function getOCR(){
  if(!ocrPromise){
   ocrPromise=new Promise((resolve,reject)=>{
-   if(window.Tesseract){resolve(window.Tesseract);return;}
+   if(window.Tesseract){
+    resolve(window.Tesseract);
+    return;
+   }
    const script=document.createElement("script");
    script.src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js";
    script.onload=()=>resolve(window.Tesseract);
    script.onerror=()=>reject(Error("Falha ao carregar OCR"));
    document.head.append(script);
-  }).catch(e=>{ocrPromise=null;throw e;});
+  }).catch(e=>{
+   ocrPromise=null;
+   throw e;
+  });
  }
  return ocrPromise;
 }
@@ -748,11 +752,16 @@ async function resizeImage(file,max=1400,quality=.85){
    const canvas=document.createElement("canvas");
    canvas.width=Math.round(img.width*scale);
    canvas.height=Math.round(img.height*scale);
-   canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+   canvas.getContext("2d").drawImage(
+    img,0,0,canvas.width,canvas.height
+   );
    URL.revokeObjectURL(url);
    resolve(canvas.toDataURL("image/jpeg",quality));
   };
-  img.onerror=()=>{URL.revokeObjectURL(url);reject(Error("Imagem inválida"));};
+  img.onerror=()=>{
+   URL.revokeObjectURL(url);
+   reject(Error("Imagem inválida"));
+  };
   img.src=url;
  });
 }
@@ -777,20 +786,26 @@ $("camera").addEventListener("change",async e=>{
  const status=$("ocrStatus");
  status.style.display="block";
  status.textContent="Lendo imagem... Aguarde.";
+
  try{
-  photo=await resizeImage(file,650,.65);
+  /* Foto em resolução maior para visualização */
+  photo=await resizeImage(file,1600,.88);
   $("photoPreview").src=photo;
   $("photoPreview").style.display="block";
+
   const text=await recognize(file);
   const lines=text.split("\n").map(x=>x.trim()).filter(Boolean);
   const name=lines.filter(x=>
    /[A-Za-zÀ-ÿ]{3}/.test(x)&&
    !/R\$|PREÇO|TOTAL|VALIDADE|CNPJ/i.test(x)
   ).slice(0,2).join(" ");
+
   if(name)$("name").value=name.slice(0,150);
+
   const prices=findPrices(text);
-  if(prices.length===1)$("price").value=prices[0].toFixed(2);
-  else if(prices.length>1){
+  if(prices.length===1){
+   $("price").value=prices[0].toFixed(2);
+  }else if(prices.length>1){
    const choice=prompt(
     "Preços encontrados:\n"+
     prices.map((p,i)=>(i+1)+". "+money(p)).join("\n")+
@@ -800,7 +815,8 @@ $("camera").addEventListener("change",async e=>{
    if(Number.isInteger(index)&&prices[index])
     $("price").value=prices[index].toFixed(2);
   }
-  status.textContent="Leitura concluída. Confira nome, preço e quantidade antes de salvar.";
+
+  status.textContent="Leitura concluída. Confira os dados antes de salvar.";
   updateSubtotal();
  }catch(err){
   status.textContent="Não foi possível ler a imagem. Preencha manualmente.";
@@ -808,7 +824,7 @@ $("camera").addEventListener("change",async e=>{
  e.target.value="";
 });
 
-// Conferência de cupom fiscal
+/* CONFERÊNCIA DO CUPOM */
 function normalize(s){
  return String(s).toUpperCase()
   .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
@@ -835,7 +851,11 @@ function parseReceipt(text){
   if(normalize(name).length<4)continue;
   if(/TOTAL|TROCO|PAGAMENTO|DESCONTO|SUBTOTAL|CNPJ/i.test(name))
    continue;
-  items.push({name,price:prices[prices.length-1],used:false});
+  items.push({
+   name,
+   price:prices[prices.length-1],
+   used:false
+  });
  }
  return items;
 }
@@ -843,35 +863,45 @@ function parseReceipt(text){
 $("receipt").addEventListener("change",async e=>{
  const file=e.target.files[0];
  if(!file)return;
+
  try{
-  alert("A leitura do cupom será iniciada. Pode demorar alguns segundos.");
+  alert("A leitura do cupom será iniciada.");
   const text=await recognize(file);
   const receiptItems=parseReceipt(text);
   const root=$("results");
   root.replaceChildren();
+
   root.append(el("p","notice",
-   "Resultados estimados por OCR. Valores unitários e totais do cupom podem ser confundidos. Confira visualmente."));
+   "Resultados estimados por OCR. Confira os preços unitários e totais no cupom."));
+
   for(const p of cart){
    let best=null,score=0;
+
    for(const r of receiptItems){
     if(r.used)continue;
     const s=similarity(p.name,r.name);
-    if(s>score){score=s;best=r;}
+    if(s>score){
+     score=s;
+     best=r;
+    }
    }
+
    const box=el("div","result");
    box.append(el("strong","",p.name));
+
    if(best&&score>=.5){
     best.used=true;
     const diff=Math.round((best.price-p.price)*100)/100;
     box.append(el("small","",
      "Registrado: "+money(p.price)+
-     " | Cupom (valor identificado): "+money(best.price)));
+     " | Cupom: "+money(best.price)));
+
     if(Math.abs(diff)<.01){
      box.classList.add("ok");
      box.append(el("small","","✓ Valores identificados coincidem. Verifique a unidade."));
     }else if(diff>0){
      box.classList.add("bad");
-     box.append(el("small","","⚠ Possível diferença de "+money(diff)+". Confirmar no cupom."));
+     box.append(el("small","","⚠ Possível diferença de "+money(diff)+". Confirme no cupom."));
     }else{
      box.append(el("small","","Possível valor inferior no cupom. Confirmar."));
     }
@@ -880,6 +910,7 @@ $("receipt").addEventListener("change",async e=>{
    }
    root.append(box);
   }
+
   closeOverlay("checkoutOverlay");
   $("resultsOverlay").classList.add("active");
  }catch(err){
