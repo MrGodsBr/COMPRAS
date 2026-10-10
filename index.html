@@ -5,53 +5,83 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>MINHAS COMPRAS 3.0</title>
+<title>MINHAS COMPRAS 3.1</title>
+
 <style>
 :root{
- --bg:#f3f4f6;--ink:#171717;--muted:#737780;
- --line:#e5e7eb;--green:#16a34a;--red:#dc2626;
+ --bg:#f3f4f6;
+ --ink:#171717;
+ --muted:#737780;
+ --line:#e5e7eb;
+ --green:#16a34a;
+ --red:#dc2626;
  --blue:#2563eb;
 }
 *{box-sizing:border-box}
 body{
- margin:0;background:var(--bg);color:var(--ink);
- font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+ margin:0;
+ background:var(--bg);
+ color:var(--ink);
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
 button,input,select{font:inherit}
 button{cursor:pointer}
-button:disabled{opacity:.5;cursor:not-allowed}
+button:disabled{opacity:.5}
 .app{
- max-width:480px;margin:auto;min-height:100dvh;
- background:white;padding-bottom:90px
+ max-width:480px;
+ margin:auto;
+ min-height:100dvh;
+ background:white;
+ padding-bottom:95px;
 }
 header{
- padding:22px 20px;border-bottom:1px solid var(--line);
- display:flex;justify-content:space-between;align-items:center
+ padding:22px 20px;
+ border-bottom:1px solid var(--line);
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
 }
 header strong{font-size:21px}
 main{padding:20px}
 .card{
- background:#f6f7f9;border-radius:18px;
- padding:20px;margin-bottom:18px
+ background:#f6f7f9;
+ border-radius:18px;
+ padding:20px;
+ margin-bottom:18px;
 }
 .row{
- display:flex;justify-content:space-between;
- align-items:center;gap:10px
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
 }
 .muted{color:var(--muted);font-size:13px}
 .big{font-size:32px;font-weight:800;margin:12px 0}
 .progress{
- height:9px;background:#e2e5e9;
- border-radius:20px;overflow:hidden;margin:16px 0
+ height:9px;
+ background:#e2e5e9;
+ border-radius:20px;
+ overflow:hidden;
+ margin:16px 0;
 }
 #bar{
- width:0;height:100%;background:var(--green);
- transition:.3s
+ width:0;
+ height:100%;
+ background:var(--green);
+ transition:.3s;
 }
 .btn{
- display:flex;justify-content:center;align-items:center;
- gap:8px;width:100%;padding:15px;border-radius:12px;
- border:0;font-weight:700;margin:10px 0;text-align:center
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ gap:8px;
+ width:100%;
+ padding:15px;
+ border-radius:12px;
+ border:0;
+ font-weight:700;
+ margin:10px 0;
+ text-align:center;
 }
 .dark{background:#111;color:white}
 .light{background:#f2f3f5;color:#111}
@@ -60,167 +90,311 @@ main{padding:20px}
 .green{color:var(--green)}
 .blue{color:var(--blue)}
 .grid{
- display:grid;grid-template-columns:1fr 1fr;gap:10px
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
 }
 .grid .btn{
- min-height:85px;flex-direction:column;font-size:13px
+ min-height:85px;
+ flex-direction:column;
+ font-size:13px;
 }
 h3{font-size:17px;margin:24px 0 12px}
 .item{
- display:flex;gap:12px;align-items:center;
- padding:14px 0;border-bottom:1px solid var(--line)
+ display:flex;
+ gap:12px;
+ align-items:center;
+ padding:14px 0;
+ border-bottom:1px solid var(--line);
 }
 .thumb{
- width:55px;height:55px;background:#f2f3f5;
- border:0;border-radius:10px;display:grid;place-items:center;
- flex-shrink:0;overflow:hidden;font-size:23px;padding:0
+ width:55px;
+ height:55px;
+ background:#f2f3f5;
+ border:0;
+ border-radius:10px;
+ display:grid;
+ place-items:center;
+ flex-shrink:0;
+ overflow:hidden;
+ font-size:23px;
+ padding:0;
 }
 .thumb img{
- width:100%;height:100%;object-fit:cover
+ width:100%;
+ height:100%;
+ object-fit:cover;
 }
 .info{flex:1;min-width:0}
 .info strong{
- display:block;font-size:14px;overflow-wrap:anywhere
+ display:block;
+ font-size:14px;
+ overflow-wrap:anywhere;
 }
 .info small{
- display:block;color:var(--muted);margin-top:5px
+ display:block;
+ color:var(--muted);
+ margin-top:5px;
 }
 .controls{
- display:flex;gap:7px;align-items:center;
- margin-top:9px;flex-wrap:wrap
+ display:flex;
+ gap:7px;
+ align-items:center;
+ margin-top:9px;
+ flex-wrap:wrap;
 }
 .mini{
- background:#f2f3f5;border:0;border-radius:8px;
- min-width:31px;min-height:31px;padding:5px
+ background:#f2f3f5;
+ border:0;
+ border-radius:8px;
+ min-width:32px;
+ min-height:32px;
+ padding:5px;
 }
 .amount{font-weight:700;font-size:14px}
 nav{
- position:fixed;bottom:0;left:50%;
- transform:translateX(-50%);max-width:480px;width:100%;
- display:flex;background:white;border-top:1px solid var(--line);
- padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:5
+ position:fixed;
+ bottom:0;
+ left:50%;
+ transform:translateX(-50%);
+ max-width:480px;
+ width:100%;
+ display:flex;
+ background:white;
+ border-top:1px solid var(--line);
+ padding:8px 0 max(8px,env(safe-area-inset-bottom));
+ z-index:5;
 }
 nav button{
- flex:1;border:0;background:none;
- color:var(--muted);padding:8px;font-size:12px
+ flex:1;
+ border:0;
+ background:none;
+ color:var(--muted);
+ padding:8px;
+ font-size:12px;
 }
 nav button.active{color:#111;font-weight:800}
 .page{display:none}
 .page.active{display:block}
 .overlay{
- position:fixed;inset:0;background:#0009;display:none;
- align-items:flex-end;justify-content:center;z-index:20
+ position:fixed;
+ inset:0;
+ background:#0009;
+ display:none;
+ align-items:flex-end;
+ justify-content:center;
+ z-index:20;
 }
 .overlay.active{display:flex}
 .modal{
- width:100%;max-width:480px;max-height:92dvh;
- overflow:auto;background:white;padding:22px;
- border-radius:22px 22px 0 0
+ width:100%;
+ max-width:480px;
+ max-height:92dvh;
+ overflow:auto;
+ background:white;
+ padding:22px;
+ border-radius:22px 22px 0 0;
 }
 .modal h3{margin:0 0 20px}
 label{
- display:block;font-size:13px;
- font-weight:600;margin:13px 0 6px
+ display:block;
+ font-size:13px;
+ font-weight:600;
+ margin:13px 0 6px;
 }
 input,select{
- width:100%;padding:13px;border:1px solid #ddd;
- border-radius:10px;background:#fafafa
+ width:100%;
+ padding:13px;
+ border:1px solid #ddd;
+ border-radius:10px;
+ background:#fafafa;
 }
 input[type=file]{display:none}
 .two{
- display:grid;grid-template-columns:1fr 1fr;gap:12px
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
 }
 .notice{
- padding:13px;border-radius:10px;
- background:#fff7e8;font-size:13px;line-height:1.5
+ padding:13px;
+ border-radius:10px;
+ background:#fff7e8;
+ font-size:13px;
+ line-height:1.5;
 }
 .result{
- padding:13px;margin:10px 0;border-radius:10px;
- background:#f6f7f9;border-left:5px solid #eab308
+ padding:13px;
+ margin:10px 0;
+ border-radius:10px;
+ background:#f6f7f9;
+ border-left:5px solid #eab308;
 }
 .result.ok{border-color:var(--green)}
 .result.bad{border-color:var(--red)}
 .result small{display:block;margin-top:6px}
 .empty{
- padding:30px 12px;text-align:center;color:var(--muted)
+ padding:30px 12px;
+ text-align:center;
+ color:var(--muted);
 }
 #photoPreview{
- max-width:100%;max-height:180px;border-radius:10px;
- display:none;margin:10px auto
+ max-width:100%;
+ max-height:180px;
+ border-radius:10px;
+ display:none;
+ margin:10px auto;
 }
 .price-option{
- display:inline-block;width:auto;padding:9px 12px;
- margin:5px;border:1px solid #ddd;border-radius:9px;
- background:white;font-weight:600
+ display:inline-block;
+ width:auto;
+ padding:9px 12px;
+ margin:5px;
+ border:1px solid #ddd;
+ border-radius:9px;
+ background:white;
+ font-weight:600;
 }
 .image-viewer{
- position:fixed;inset:0;z-index:9999;display:none;
- align-items:center;justify-content:center;
- background:rgba(0,0,0,.96);padding:65px 15px 35px
+ position:fixed;
+ inset:0;
+ z-index:9999;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ background:rgba(0,0,0,.96);
+ padding:65px 15px 35px;
 }
 .image-viewer.active{display:flex}
 .image-viewer img{
- max-width:100%;max-height:100%;
- width:auto;height:auto;object-fit:contain
+ max-width:100%;
+ max-height:100%;
+ width:auto;
+ height:auto;
+ object-fit:contain;
 }
 .image-viewer-close{
- position:absolute;top:max(15px,env(safe-area-inset-top));
- right:20px;width:42px;height:42px;border:0;
- border-radius:50%;background:white;color:#111;font-size:26px
+ position:absolute;
+ top:max(15px,env(safe-area-inset-top));
+ right:20px;
+ width:42px;
+ height:42px;
+ border:0;
+ border-radius:50%;
+ background:white;
+ color:#111;
+ font-size:26px;
 }
 .history-delete{
- background:#fee2e2;color:#b91c1c;border:0;
- border-radius:10px;width:42px;height:42px;
- font-size:19px;display:grid;place-items:center;
- flex-shrink:0
+ background:#fee2e2;
+ color:#b91c1c;
+ border:0;
+ border-radius:10px;
+ width:42px;
+ height:42px;
+ font-size:19px;
+ display:grid;
+ place-items:center;
+ flex-shrink:0;
 }
 .history-card details{margin-top:13px}
-.history-card summary{cursor:pointer;font-size:14px;font-weight:600}
+.history-card summary{
+ cursor:pointer;
+ font-size:14px;
+ font-weight:600;
+}
 .price-info{
- background:#eef6ff;border:1px solid #cfe3ff;
- border-radius:12px;padding:12px;margin-top:12px;
- font-size:13px;line-height:1.5
+ background:#eef6ff;
+ border:1px solid #cfe3ff;
+ border-radius:12px;
+ padding:12px;
+ margin-top:12px;
+ font-size:13px;
+ line-height:1.5;
 }
 .catalog-card{
- display:flex;gap:12px;align-items:center;
- padding:12px 0;border-bottom:1px solid var(--line)
+ display:flex;
+ gap:12px;
+ align-items:center;
+ padding:12px 0;
+ border-bottom:1px solid var(--line);
 }
 .catalog-card img{
- width:50px;height:50px;object-fit:contain;
- border-radius:8px;background:white
+ width:50px;
+ height:50px;
+ object-fit:contain;
+ border-radius:8px;
+ background:white;
 }
 .catalog-card .info{min-width:0}
 .catalog-card button{flex-shrink:0}
 #barcodeReader{
- width:100%;overflow:hidden;border-radius:12px;
- background:#111;min-height:180px;margin:12px 0
+ width:100%;
+ min-height:230px;
+ overflow:hidden;
+ border-radius:14px;
+ background:#111;
+ margin:12px 0;
+ position:relative;
 }
-#barcodeReader video{max-width:100%}
+#barcodeReader video{
+ width:100%!important;
+ max-width:100%;
+ object-fit:cover;
+}
 .scan-status{
- padding:12px;background:#eef6ff;
- border-radius:10px;font-size:13px;line-height:1.5
+ padding:12px;
+ background:#eef6ff;
+ border-radius:10px;
+ font-size:13px;
+ line-height:1.5;
 }
-.small{font-size:12px}
-.pill{
- display:inline-block;background:#e8f5e9;
- color:#166534;border-radius:20px;
- padding:4px 9px;font-size:11px;font-weight:700
+.scan-tip{
+ font-size:12px;
+ color:var(--muted);
+ line-height:1.5;
+}
+.scan-actions{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+}
+.scan-actions .btn{
+ margin:5px 0;
+ font-size:13px;
+}
+.scan-guide{
+ background:#f6f7f9;
+ padding:12px;
+ border-radius:12px;
+ margin:10px 0;
+}
+.scan-guide strong{
+ font-size:13px;
+}
+.scan-guide p{
+ margin:6px 0 0;
+ font-size:12px;
+ color:var(--muted);
 }
 </style>
 </head>
+
 <body>
 
 <div class="app">
+
 <header>
  <div>
   <strong>MINHAS COMPRAS 🛒</strong>
-  <div class="muted">Assistente inteligente • v3.0</div>
+  <div class="muted">Assistente inteligente • v3.1</div>
  </div>
  <span style="font-size:25px">🛍️</span>
 </header>
 
 <main>
+
 <section id="home" class="page active">
+
  <div class="card">
   <div class="row">
    <span class="muted">Total do carrinho</span>
@@ -237,16 +411,23 @@ input[type=file]{display:none}
 
  <div class="grid">
   <button class="btn dark" onclick="startBarcodeScanner()">
-   ▥<span>Ler código de barras</span>
+   ▥
+   <span>Ler código de barras</span>
   </button>
-  <button class="btn light" onclick="document.getElementById('camera').click()">
-   📷<span>Fotografar produto</span>
+
+  <button class="btn light" onclick="$('camera').click()">
+   📷
+   <span>Fotografar produto</span>
   </button>
+
   <button class="btn light" onclick="openProduct()">
-   ➕<span>Adicionar manualmente</span>
+   ➕
+   <span>Adicionar manualmente</span>
   </button>
+
   <button class="btn light" onclick="showPage('catalog')">
-   📦<span>Meus produtos</span>
+   📦
+   <span>Meus produtos</span>
   </button>
  </div>
 
@@ -256,10 +437,12 @@ input[type=file]{display:none}
   <h3>Meu carrinho</h3>
   <span class="muted" id="count">0 produtos</span>
  </div>
+
  <div id="cart"></div>
 
  <button class="btn dark" onclick="checkout()">✔ Finalizar compra</button>
  <button class="btn light danger" onclick="clearCart()">🗑️ Esvaziar carrinho</button>
+
 </section>
 
 <section id="history" class="page">
@@ -276,14 +459,17 @@ input[type=file]{display:none}
  <h3>📦 Meus produtos</h3>
  <p class="muted">
   Produtos identificados por código de barras ficam
-  disponíveis para próximas compras.
+  disponíveis para as próximas compras.
  </p>
- <input id="catalogSearch" placeholder="Pesquisar produto ou código" oninput="renderCatalog()">
+ <input id="catalogSearch"
+  placeholder="Pesquisar produto ou código"
+  oninput="renderCatalog()">
  <div id="catalogList"></div>
 </section>
 
 <section id="settings" class="page">
  <h3>⚙️ Configurações</h3>
+
  <div class="card">
   <strong>Backup dos dados</strong>
   <p class="muted">
@@ -294,20 +480,22 @@ input[type=file]{display:none}
   <button class="btn outline" onclick="$('backupInput').click()">📥 Importar backup</button>
   <input id="backupInput" type="file" accept=".json,application/json">
  </div>
+
  <div class="card">
   <strong>Identificação inteligente</strong>
   <p class="muted">
-   O aplicativo consulta produtos alimentícios no
-   Open Food Facts. Os registros podem estar
-   incompletos ou desatualizados.
+   O aplicativo consulta produtos alimentícios no Open Food Facts.
+   Os registros podem estar incompletos ou desatualizados.
   </p>
   <p class="muted">
    O reconhecimento de texto usa Tesseract.js.
-   A câmera de código de barras requer permissão
-   do navegador e normalmente HTTPS.
+   A leitura de códigos usa html5-qrcode e, quando
+   disponível, o leitor nativo do navegador.
   </p>
  </div>
+
 </section>
+
 </main>
 
 <nav>
@@ -316,11 +504,13 @@ input[type=file]{display:none}
  <button data-page="catalog" onclick="showPage('catalog')">📦<br>Produtos</button>
  <button data-page="settings" onclick="showPage('settings')">⚙️<br>Ajustes</button>
 </nav>
+
 </div>
 
-<!-- FORMULÁRIO DE PRODUTO -->
+<!-- FORMULÁRIO -->
 <div class="overlay" id="productOverlay">
 <div class="modal">
+
  <div class="row">
   <h3 id="productHeading">Adicionar produto</h3>
   <button class="mini" onclick="closeProduct()">✕</button>
@@ -330,7 +520,7 @@ input[type=file]{display:none}
 
  <img id="photoPreview" alt="Foto do produto">
 
- <label>Código de barras (opcional)</label>
+ <label>Código de barras</label>
  <div class="row">
   <input id="barcode" inputmode="numeric" placeholder="7891234567890">
   <button class="mini" onclick="lookupCurrentBarcode()" title="Pesquisar código">🔎</button>
@@ -339,10 +529,10 @@ input[type=file]{display:none}
  <label>Nome do produto</label>
  <input id="name" maxlength="150" placeholder="Ex.: Arroz 5 kg">
 
- <label>Marca (opcional)</label>
- <input id="brand" maxlength="100" placeholder="Ex.: Marca do produto">
+ <label>Marca</label>
+ <input id="brand" maxlength="100" placeholder="Marca do produto">
 
- <label>Embalagem (opcional)</label>
+ <label>Embalagem</label>
  <input id="packageSize" maxlength="60" placeholder="Ex.: 500 g">
 
  <label>Tipo de produto</label>
@@ -355,7 +545,8 @@ input[type=file]{display:none}
   <div>
    <label id="priceLabel">Preço por unidade (R$)</label>
    <input id="price" type="text" inputmode="decimal"
-    placeholder="0,00" oninput="updateSubtotal();renderPriceComparison()">
+    placeholder="0,00"
+    oninput="updateSubtotal();renderPriceComparison()">
   </div>
   <div>
    <label id="qtyLabel">Quantidade</label>
@@ -374,36 +565,54 @@ input[type=file]{display:none}
 
  <button class="btn dark" id="saveButton" onclick="saveProduct()">Salvar produto</button>
  <button class="btn light" onclick="closeProduct()">Cancelar</button>
+
 </div>
 </div>
 
-<!-- LEITOR DE CÓDIGO DE BARRAS -->
+<!-- LEITOR MELHORADO -->
 <div class="overlay" id="scannerOverlay">
 <div class="modal">
+
  <div class="row">
-  <h3>▥ Ler código de barras</h3>
+  <h3>▥ Leitor de código de barras</h3>
   <button class="mini" onclick="closeScanner()">✕</button>
  </div>
- <p class="muted">
-  Aponte a câmera para o código de barras da embalagem.
- </p>
+
+ <div class="scan-guide">
+  <strong>Como posicionar</strong>
+  <p>
+   Mantenha o código inteiro na horizontal, sem cortar
+   as barras. Afaste um pouco o celular para melhorar o foco.
+  </p>
+ </div>
+
  <div id="barcodeReader"></div>
+
  <p id="scannerStatus" class="scan-status">
   Preparando câmera...
  </p>
- <button class="btn outline" onclick="closeScanner();$('barcodeImage').click()">
-  🖼️ Ler código de uma foto
+
+ <div class="scan-actions">
+  <button class="btn outline" onclick="chooseBarcodePhoto()">
+   🖼️ Usar foto
+  </button>
+  <button class="btn outline" onclick="manualBarcode()">
+   ⌨️ Digitar código
+  </button>
+ </div>
+
+ <button class="btn light" onclick="retryBarcodeScanner()">
+  🔄 Reiniciar câmera
  </button>
- <button class="btn light" onclick="manualBarcode()">
-  ⌨️ Digitar código
- </button>
+
  <button class="btn light danger" onclick="closeScanner()">
   Cancelar
  </button>
+
 </div>
 </div>
 
-<input id="barcodeImage" type="file" accept="image/*" style="display:none">
+<input id="barcodeImage" type="file" accept="image/*">
 
 <!-- FINALIZAR -->
 <div class="overlay" id="checkoutOverlay">
@@ -412,14 +621,18 @@ input[type=file]{display:none}
   <h3>Finalizar compra</h3>
   <button class="mini" onclick="closeOverlay('checkoutOverlay')">✕</button>
  </div>
+
  <div class="card">
   <span class="muted">Total previsto</span>
   <div class="big" id="checkoutTotal">R$ 0,00</div>
  </div>
+
  <button class="btn dark" onclick="shareList()">📤 Compartilhar lista</button>
  <button class="btn outline" onclick="$('receipt').click()">🧾 Fotografar cupom fiscal</button>
  <input id="receipt" type="file" accept="image/*" capture="environment">
+
  <button class="btn light" onclick="finishPurchase()">✔ Salvar compra no histórico</button>
+
  <p class="muted">
   A conferência fiscal é experimental.
   Confirme os valores no cupom original.
@@ -485,6 +698,17 @@ function validBarcode(code){
  return /^\d{8}$|^\d{12,14}$/.test(code);
 }
 
+function validBarcodeChecksum(code){
+ if(!validBarcode(code))return false;
+ const digits=code.split("").map(Number);
+ const check=digits.pop();
+ let sum=0;
+ for(let i=digits.length-1,pos=0;i>=0;i--,pos++){
+  sum+=digits[i]*(pos%2===0?3:1);
+ }
+ return (10-(sum%10))%10===check;
+}
+
 let budget=300;
 let cart=[];
 let history=[];
@@ -494,11 +718,9 @@ let dbReady=false;
 let editing=null;
 let photo=null;
 let scanToken=0;
-let scanner=null;
-let scannerBusy=false;
 let ocrPromise=null;
 
-/* BANCO DE DADOS */
+/* ARMAZENAMENTO */
 function openDB(){
  return new Promise((resolve,reject)=>{
   const r=indexedDB.open("MinhasComprasV2",1);
@@ -525,15 +747,18 @@ let saveQueue=Promise.resolve();
 
 function persist(){
  if(!dbReady)return Promise.resolve();
+
  const snapshot=JSON.parse(JSON.stringify({
   budget,cart,history,catalog
  }));
+
  saveQueue=saveQueue.catch(()=>{}).then(()=>
   dbAction("readwrite",s=>s.put(snapshot,"state"))
  );
+
  return saveQueue.catch(e=>{
   console.error(e);
-  alert("Não foi possível salvar os dados. Verifique o armazenamento.");
+  alert("Não foi possível salvar os dados.");
  });
 }
 
@@ -541,6 +766,7 @@ async function init(){
  try{
   db=await openDB();
   const data=await dbAction("readonly",s=>s.get("state"));
+
   if(data){
    budget=Number(data.budget)>0?Number(data.budget):300;
    cart=Array.isArray(data.cart)?data.cart:[];
@@ -548,15 +774,17 @@ async function init(){
    catalog=data.catalog&&typeof data.catalog==="object"&&!Array.isArray(data.catalog)
     ?data.catalog:{};
   }
+
   dbReady=true;
  }catch(e){
   console.error(e);
-  alert("O armazenamento não está disponível neste navegador.");
+  alert("Armazenamento indisponível.");
  }
+
  render();
 }
 
-/* TELA PRINCIPAL */
+/* INTERFACE */
 function totalCart(){
  return round(cart.reduce((s,p)=>s+p.price*p.qty,0));
 }
@@ -570,6 +798,7 @@ function render(){
  $("remaining").textContent=remaining>=0
   ?"Restante: "+money(remaining)
   :"Excedido: "+money(-remaining);
+
  $("remaining").className=remaining>=0?"green":"danger";
  $("budgetLabel").textContent="Orçamento: "+money(budget);
  $("percent").textContent=pct.toFixed(1)+"%";
@@ -594,11 +823,13 @@ function showPage(id){
 function editBudget(){
  const v=prompt("Novo orçamento:",String(budget).replace(".",","));
  if(v===null)return;
+
  const n=num(v);
  if(!Number.isFinite(n)||n<=0){
   alert("Informe um valor válido.");
   return;
  }
+
  budget=round(n);
  persist();
  render();
@@ -663,6 +894,7 @@ function renderCart(){
    thumb,info,
    el("span","amount",money(p.price*p.qty))
   );
+
   root.append(line);
  });
 }
@@ -670,9 +902,12 @@ function renderCart(){
 function changeQty(id,dir){
  const p=cart.find(x=>x.id===id);
  if(!p)return;
+
  const step=p.type==="weight"?.1:1;
  const next=Math.round((p.qty+dir*step)*1000)/1000;
+
  if(next<=0)return;
+
  p.qty=next;
  persist();
  render();
@@ -692,7 +927,7 @@ function clearCart(){
  render();
 }
 
-/* FORMULÁRIO DE PRODUTO */
+/* FORMULÁRIO */
 function openProduct(id=null){
  scanToken++;
  editing=id;
@@ -739,8 +974,10 @@ function closeProduct(){
 
 function updateSubtotal(){
  const weight=$("type").value==="weight";
+
  $("priceLabel").textContent=weight
   ?"Preço por kg (R$)":"Preço por unidade (R$)";
+
  $("qtyLabel").textContent=weight?"Peso em kg":"Quantidade";
 
  const price=num($("price").value);
@@ -764,6 +1001,7 @@ function renderPriceComparison(){
 
  const code=safeBarcode($("barcode").value);
  const last=getLastPrice(code);
+
  if(last===null)return;
 
  box.style.display="block";
@@ -826,7 +1064,7 @@ function saveProduct(){
  }
 
  if(barcode&&!validBarcode(barcode)){
-  alert("O código de barras deve ter 8, 12, 13 ou 14 dígitos.");
+  alert("Código de barras inválido.");
   return;
  }
 
@@ -856,7 +1094,7 @@ function saveProduct(){
  render();
 }
 
-/* CATÁLOGO INTELIGENTE */
+/* CATÁLOGO */
 function renderCatalog(){
  const root=$("catalogList");
  root.replaceChildren();
@@ -898,6 +1136,7 @@ function renderCatalog(){
   }
 
   const actions=el("div");
+
   const add=el("button","mini","➕");
   add.title="Adicionar ao carrinho";
   add.onclick=()=>addFromCatalog(p.barcode);
@@ -929,7 +1168,11 @@ function addFromCatalog(code){
 }
 
 function deleteCatalogProduct(code){
- if(!confirm("Excluir este produto do catálogo?\n\nO histórico e o carrinho não serão apagados."))return;
+ if(!confirm(
+  "Excluir este produto do catálogo?\n\n"+
+  "O histórico e o carrinho não serão apagados."
+ ))return;
+
  delete catalog[code];
  persist();
  render();
@@ -959,6 +1202,11 @@ async function lookupBarcode(code){
  try{
   if(local){
    fillProduct(local);
+
+   if(local.lastPrice!=null){
+    $("price").value=String(local.lastPrice).replace(".",",");
+   }
+
    status.textContent="✓ Produto encontrado no seu catálogo.";
    return;
   }
@@ -1006,23 +1254,25 @@ async function lookupBarcode(code){
    }
 
    status.textContent=name
-    ?"✓ Produto encontrado! Confira as informações e informe o preço."
+    ?"✓ Produto encontrado! Confira os dados e informe o preço."
     :"Produto localizado, mas sem nome disponível. Complete o cadastro.";
   }else{
    status.textContent=
-    "Produto não encontrado na base pública. Cadastre uma vez e ele ficará salvo para as próximas compras.";
+    "Produto não encontrado na base pública. Cadastre uma vez para salvar no seu catálogo.";
   }
 
  }catch(e){
   console.error(e);
   if(token===scanToken){
    status.textContent=
-    "Não foi possível consultar a base online. Você pode cadastrar o produto manualmente.";
+    "Não foi possível consultar a base online. Você pode cadastrar manualmente.";
   }
  }finally{
-  if(token===scanToken)$("saveButton").disabled=false;
-  renderPriceComparison();
-  updateSubtotal();
+  if(token===scanToken){
+   $("saveButton").disabled=false;
+   renderPriceComparison();
+   updateSubtotal();
+  }
  }
 }
 
@@ -1059,7 +1309,14 @@ function lookupCurrentBarcode(){
  lookupBarcode(code);
 }
 
-/* LEITOR DE CÓDIGO DE BARRAS */
+/* LEITOR 3.1 */
+let scanner=null;
+let scannerStarting=false;
+let scannerFound=false;
+let scannerSession=0;
+let barcodeLibraryPromise=null;
+let scanRetryTimer=null;
+
 function loadScript(src){
  return new Promise((resolve,reject)=>{
   const script=document.createElement("script");
@@ -1070,10 +1327,9 @@ function loadScript(src){
  });
 }
 
-let barcodeLibraryPromise=null;
-
 async function loadBarcodeLibrary(){
  if(window.Html5Qrcode)return;
+
  if(!barcodeLibraryPromise){
   barcodeLibraryPromise=loadScript(
    "https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"
@@ -1082,58 +1338,167 @@ async function loadBarcodeLibrary(){
    throw e;
   });
  }
+
  await barcodeLibraryPromise;
 }
 
+function barcodeFormats(){
+ if(!window.Html5QrcodeSupportedFormats)return undefined;
+
+ const F=Html5QrcodeSupportedFormats;
+
+ return [
+  F.EAN_13,
+  F.EAN_8,
+  F.UPC_A,
+  F.UPC_E,
+  F.ITF,
+  F.CODE_128
+ ];
+}
+
+function barcodeQrbox(w,h){
+ const width=Math.max(180,Math.min(w-20,420));
+ const height=Math.max(90,Math.min(h-20,180));
+
+ return {
+  width:Math.round(width),
+  height:Math.round(height)
+ };
+}
+
 async function startBarcodeScanner(){
- if(scannerBusy)return;
+ if(scannerStarting)return;
+
+ scannerSession++;
+ const session=scannerSession;
+ scannerFound=false;
+ scannerStarting=true;
 
  $("scannerOverlay").classList.add("active");
  $("scannerStatus").textContent="Preparando câmera...";
 
  if(!navigator.mediaDevices?.getUserMedia){
   $("scannerStatus").textContent=
-   "A câmera não está disponível neste ambiente. Use HTTPS ou digite o código manualmente.";
+   "A câmera não está disponível. Abra o aplicativo em HTTPS ou digite o código.";
+  scannerStarting=false;
   return;
  }
-
- scannerBusy=true;
 
  try{
   await loadBarcodeLibrary();
 
-  if(!$("scannerOverlay").classList.contains("active"))return;
+  if(session!==scannerSession)return;
 
-  scanner=new Html5Qrcode("barcodeReader",{
-   verbose:false
-  });
+  const formats=barcodeFormats();
 
-  await scanner.start(
-   {facingMode:"environment"},
-   {fps:10,qrbox:{width:250,height:130}},
-   async decodedText=>{
-    const code=safeBarcode(decodedText);
-    if(!validBarcode(code)||scannerBusy==="found")return;
-    scannerBusy="found";
-    await closeScanner();
-    lookupBarcode(code);
-   },
-   ()=>{}
+  scanner=new Html5Qrcode(
+   "barcodeReader",
+   {
+    verbose:false,
+    ...(formats?{formatsToSupport:formats}:{})
+   }
   );
 
+  const config={
+   fps:15,
+   qrbox:barcodeQrbox,
+   aspectRatio:1.777778,
+   disableFlip:false,
+   videoConstraints:{
+    facingMode:"environment",
+    width:{ideal:1920},
+    height:{ideal:1080}
+   }
+  };
+
+  try{
+   await scanner.start(
+    {facingMode:"environment"},
+    config,
+    decoded=>handleBarcodeDetected(decoded,session),
+    ()=>{}
+   );
+  }catch(firstError){
+   console.warn("Tentativa HD falhou",firstError);
+
+   if(session!==scannerSession)return;
+
+   try{
+    await scanner.clear();
+   }catch(e){}
+
+   scanner=new Html5Qrcode(
+    "barcodeReader",
+    {
+     verbose:false,
+     ...(formats?{formatsToSupport:formats}:{})
+    }
+   );
+
+   await scanner.start(
+    {facingMode:"environment"},
+    {
+     fps:10,
+     qrbox:barcodeQrbox,
+     aspectRatio:1.777778
+    },
+    decoded=>handleBarcodeDetected(decoded,session),
+    ()=>{}
+   );
+  }
+
+  if(session!==scannerSession)return;
+
   $("scannerStatus").textContent=
-   "Aponte para o código EAN/UPC e mantenha a câmera firme.";
+   "Câmera ativa. Enquadre todas as barras e aguarde a leitura.";
+
+  // Segunda tentativa: troca automaticamente o tamanho
+  // da região de leitura após alguns segundos.
+  scanRetryTimer=setTimeout(()=>{
+   if(session!==scannerSession||scannerFound)return;
+   $("scannerStatus").textContent=
+    "Ainda não identificou? Afaste um pouco o celular, evite reflexos e mantenha o código inteiro visível.";
+  },7000);
 
  }catch(e){
   console.error(e);
-  $("scannerStatus").textContent=
-   "Não foi possível iniciar a câmera. Verifique a permissão ou use a digitação manual.";
+
+  if(session===scannerSession){
+   $("scannerStatus").textContent=
+    "Não foi possível iniciar a câmera. Verifique as permissões ou use uma foto.";
+  }
  }finally{
-  if(scannerBusy!=="found")scannerBusy=false;
+  scannerStarting=false;
  }
 }
 
+async function handleBarcodeDetected(decoded,session){
+ if(session!==scannerSession||scannerFound)return;
+
+ const code=safeBarcode(decoded);
+
+ if(!validBarcode(code))return;
+ if(!validBarcodeChecksum(code))return;
+
+ scannerFound=true;
+
+ if(navigator.vibrate){
+  try{navigator.vibrate(80)}catch(e){}
+ }
+
+ await closeScanner();
+ lookupBarcode(code);
+}
+
 async function closeScanner(){
+ scannerSession++;
+
+ if(scanRetryTimer){
+  clearTimeout(scanRetryTimer);
+  scanRetryTimer=null;
+ }
+
  $("scannerOverlay").classList.remove("active");
 
  const current=scanner;
@@ -1149,14 +1514,27 @@ async function closeScanner(){
  }
 
  $("barcodeReader").replaceChildren();
- scannerBusy=false;
+ scannerStarting=false;
+ scannerFound=false;
+}
+
+async function retryBarcodeScanner(){
+ await closeScanner();
+ await startBarcodeScanner();
 }
 
 async function manualBarcode(){
  await closeScanner();
+
  const code=prompt("Digite o código de barras:");
  if(code===null)return;
+
  lookupBarcode(code);
+}
+
+async function chooseBarcodePhoto(){
+ await closeScanner();
+ $("barcodeImage").click();
 }
 
 $("barcodeImage").addEventListener("change",async e=>{
@@ -1164,21 +1542,81 @@ $("barcodeImage").addEventListener("change",async e=>{
  e.target.value="";
  if(!file)return;
 
+ let reader=null;
+
  try{
   await loadBarcodeLibrary();
-  const reader=new Html5Qrcode("barcodeReader");
-  const code=await reader.scanFile(file,true);
-  await reader.clear();
-  $("barcodeReader").replaceChildren();
+
+  const formats=barcodeFormats();
+
+  reader=new Html5Qrcode(
+   "barcodeReader",
+   {
+    verbose:false,
+    ...(formats?{formatsToSupport:formats}:{})
+   }
+  );
+
+  const decoded=await reader.scanFile(file,true);
+  const code=safeBarcode(decoded);
+
+  if(!validBarcode(code)||!validBarcodeChecksum(code)){
+   throw Error("Código inválido.");
+  }
+
   lookupBarcode(code);
+
  }catch(err){
   console.error(err);
+
+  // Alternativa: tentar detectar usando o leitor
+  // nativo do navegador, quando disponível.
+  try{
+   const code=await detectBarcodeNative(file);
+
+   if(code){
+    lookupBarcode(code);
+   }else{
+    alert("Não foi possível ler o código nesta foto. Tente uma imagem mais nítida.");
+   }
+  }catch(e){
+   alert("Não foi possível identificar o código. Tente outra foto ou digite o número.");
+  }
+ }finally{
+  if(reader){
+   try{await reader.clear()}catch(e){}
+  }
   $("barcodeReader").replaceChildren();
-  alert("Não foi possível identificar o código na imagem. Tente outra foto ou digite o número.");
  }
 });
 
-/* FOTO E OCR */
+async function detectBarcodeNative(file){
+ if(!("BarcodeDetector" in window))return null;
+
+ const detector=new BarcodeDetector({
+  formats:["ean_13","ean_8","upc_a","upc_e","code_128","itf"]
+ });
+
+ const bitmap=await createImageBitmap(file);
+
+ try{
+  const results=await detector.detect(bitmap);
+
+  for(const r of results){
+   const code=safeBarcode(r.rawValue);
+
+   if(validBarcode(code)&&validBarcodeChecksum(code)){
+    return code;
+   }
+  }
+ }finally{
+  bitmap.close();
+ }
+
+ return null;
+}
+
+/* FOTOS */
 function resizeImage(file,max=1600,quality=.88){
  return new Promise((resolve,reject)=>{
   const url=URL.createObjectURL(file);
@@ -1206,6 +1644,7 @@ function resizeImage(file,max=1600,quality=.88){
  });
 }
 
+/* OCR */
 function getOCR(){
  if(window.Tesseract)return Promise.resolve(window.Tesseract);
 
@@ -1214,7 +1653,7 @@ function getOCR(){
    const s=document.createElement("script");
    s.src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js";
    s.onload=()=>resolve(window.Tesseract);
-   s.onerror=()=>reject(Error("Não foi possível carregar o OCR."));
+   s.onerror=()=>reject(Error("Não foi possível carregar OCR."));
    document.head.append(s);
   }).catch(e=>{
    ocrPromise=null;
@@ -1353,9 +1792,9 @@ $("camera").addEventListener("change",async e=>{
   status.textContent=!text.trim()
    ?"Nenhum texto encontrado. Preencha manualmente."
    :!name
-   ?"Nome incerto. Digite o nome do produto."
+   ?"Nome incerto. Digite o nome."
    :!prices.length
-   ?"Nome identificado. Informe o preço manualmente."
+   ?"Nome identificado. Informe o preço."
    :"Nome e possível preço preenchidos. Confira antes de salvar.";
 
   updateSubtotal();
@@ -1370,7 +1809,7 @@ $("camera").addEventListener("change",async e=>{
  }
 });
 
-/* AMPLIAR IMAGEM */
+/* VISUALIZADOR DE IMAGEM */
 function openImageViewer(src){
  if(!src)return;
  $("expandedImage").src=src;
@@ -1454,7 +1893,7 @@ function finishPurchase(){
  showPage("history");
 }
 
-/* HISTÓRICO COM LIXEIRA */
+/* HISTÓRICO */
 function renderHistory(){
  const root=$("historyList");
  root.replaceChildren();
@@ -1520,9 +1959,6 @@ function deleteHistoryPurchase(id){
 
  history=history.filter(h=>h.id!==id);
 
- // Recalcula o último preço a partir do histórico restante.
- // Se não houver compras restantes, mantém o cadastro
- // sem informação de último preço.
  Object.values(catalog).forEach(p=>{
   p.lastPrice=null;
   p.lastDate=null;
@@ -1547,13 +1983,7 @@ function deleteHistoryPurchase(id){
 
 /* BACKUP */
 function exportBackup(){
- const data={
-  version:3,
-  budget,
-  cart,
-  history,
-  catalog
- };
+ const data={version:3,budget,cart,history,catalog};
 
  const blob=new Blob(
   [JSON.stringify(data,null,2)],
@@ -1564,7 +1994,7 @@ function exportBackup(){
  const a=document.createElement("a");
 
  a.href=url;
- a.download="minhas-compras-v3-backup.json";
+ a.download="minhas-compras-v3-1-backup.json";
  a.click();
 
  setTimeout(()=>URL.revokeObjectURL(url),1000);
@@ -1584,9 +2014,7 @@ $("backupInput").addEventListener("change",async e=>{
    !Array.isArray(d.history)||
    !Number.isFinite(d.budget)||
    d.budget<=0
-  ){
-   throw Error("Formato inválido.");
-  }
+  )throw Error("Formato inválido.");
 
   if(!confirm("Substituir todos os dados atuais pelo backup?"))return;
 
@@ -1596,7 +2024,6 @@ $("backupInput").addEventListener("change",async e=>{
   catalog=d.catalog&&typeof d.catalog==="object"
    &&!Array.isArray(d.catalog)?d.catalog:{};
 
-  // Recupera produtos de backups antigos.
   [...history.flatMap(h=>h.items||[]),...cart].forEach(p=>{
    if(p.barcode&&!catalog[p.barcode]){
     catalog[p.barcode]={
@@ -1622,7 +2049,7 @@ $("backupInput").addEventListener("change",async e=>{
  }
 });
 
-/* CONFERÊNCIA FISCAL EXPERIMENTAL */
+/* CONFERÊNCIA FISCAL */
 function normalize(s){
  return String(s)
   .normalize("NFD")
@@ -1681,8 +2108,9 @@ $("receipt").addEventListener("change",async e=>{
   const root=$("results");
 
   root.replaceChildren();
+
   root.append(el("p","notice",
-   "Comparação aproximada. O valor do cupom pode ser unitário ou subtotal. Confira no documento original."
+   "Comparação aproximada. Confira o cupom original."
   ));
 
   for(const p of cart){
@@ -1727,12 +2155,13 @@ $("receipt").addEventListener("change",async e=>{
 
  }catch(err){
   console.error(err);
-  alert("Erro ao ler cupom. Verifique a conexão e tente novamente.");
+  alert("Erro ao ler cupom. Tente novamente.");
  }
 });
 
 /* INICIAR */
 init();
+
 </script>
 </body>
 </html>
