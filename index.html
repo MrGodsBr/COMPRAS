@@ -5,12 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111111">
-<title>MINHAS COMPRAS 🛒</title>
+<title>MINHAS COMPRAS 2.3</title>
 <style>
-:root{
- --bg:#f3f4f6;--ink:#171717;--muted:#737780;
- --line:#e5e7eb;--green:#16a34a;--red:#dc2626;
-}
+:root{--bg:#f3f4f6;--ink:#171717;--muted:#737780;--line:#e5e7eb;--green:#16a34a;--red:#dc2626}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 button,input,select{font:inherit}
@@ -69,6 +66,9 @@ input[type=file]{display:none}
 .image-viewer.active{display:flex}
 .image-viewer img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
 .image-viewer-close{position:absolute;top:max(15px,env(safe-area-inset-top));right:20px;width:42px;height:42px;border:0;border-radius:50%;background:white;color:#111;font-size:26px}
+.history-delete{background:#fee2e2;color:#b91c1c;border:0;border-radius:10px;width:42px;height:42px;font-size:19px;display:grid;place-items:center;flex-shrink:0}
+.history-card details{margin-top:13px}
+.history-card summary{cursor:pointer;font-size:14px;font-weight:600}
 </style>
 </head>
 <body>
@@ -347,20 +347,45 @@ function finishPurchase(){
  history.unshift({id:uid(),date:new Date().toISOString(),total:totalCart(),items:cart.map(p=>({...p,image:null}))});
  cart=[];closeOverlay("checkoutOverlay");persist();render();showPage("history");
 }
+
+/* HISTÓRICO COM LIXEIRA INDIVIDUAL */
 function renderHistory(){
  const root=$("historyList");root.replaceChildren();
  $("historicalTotal").textContent=money(history.reduce((s,h)=>s+(Number(h.total)||0),0));
  $("historicalCount").textContent=history.length+" compras concluídas";
- if(!history.length){root.append(el("div","empty","Nenhuma compra registrada."));return}
+ if(!history.length){
+  root.append(el("div","empty","Nenhuma compra registrada."));
+  return;
+ }
  history.forEach(h=>{
-  const box=el("div","card");
-  box.append(el("strong","",money(h.total)));
-  box.append(el("p","muted",new Date(h.date).toLocaleString("pt-BR")));
-  const details=el("details");details.append(el("summary","","Ver produtos"));
+  const box=el("div","card history-card");
+  const top=el("div","row");
+  const info=el("div");
+  info.append(el("strong","",money(h.total)));
+  info.append(el("p","muted",new Date(h.date).toLocaleString("pt-BR")));
+  const trash=el("button","history-delete","🗑️");
+  trash.title="Excluir esta compra";
+  trash.setAttribute("aria-label","Excluir compra do histórico");
+  trash.onclick=()=>deleteHistoryPurchase(h.id);
+  top.append(info,trash);
+  box.append(top);
+  const details=el("details");
+  details.append(el("summary","","Ver produtos ("+h.items.length+")"));
   h.items.forEach(p=>details.append(el("p","muted",p.name+" — "+money(p.price*p.qty))));
-  box.append(details);root.append(box);
+  box.append(details);
+  root.append(box);
  });
 }
+function deleteHistoryPurchase(id){
+ const purchase=history.find(h=>h.id===id);
+ if(!purchase)return;
+ const date=new Date(purchase.date).toLocaleDateString("pt-BR");
+ if(!confirm("🗑️ Excluir compra de "+date+"?\n\nValor: "+money(purchase.total)+"\n\nEssa ação não poderá ser desfeita."))return;
+ history=history.filter(h=>h.id!==id);
+ persist();
+ render();
+}
+
 function exportBackup(){
  const blob=new Blob([JSON.stringify({version:2,budget,cart,history},null,2)],{type:"application/json"});
  const url=URL.createObjectURL(blob),a=document.createElement("a");
@@ -379,7 +404,7 @@ $("backupInput").addEventListener("change",async e=>{
  e.target.value="";
 });
 
-/* LEITURA AUTOMÁTICA CORRIGIDA */
+/* LEITURA AUTOMÁTICA DE PRODUTOS */
 let ocrPromise=null;
 function getOCR(){
  if(window.Tesseract)return Promise.resolve(window.Tesseract);
