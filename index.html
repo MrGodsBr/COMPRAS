@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sua Compra</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #1d1d1f;
+            --text-muted: #86868b;
+            --primary-black: #111111;
+            --primary-light: #f5f5f7;
+            --green: #34c759;
+            --red: #ff3b30;
+            --border: #e5e5ea;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 420px;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            padding-bottom: 80px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .header span { color: var(--text-muted); cursor: pointer; font-weight: normal; }
+
+        .content { padding: 20px; }
+
+        /* Orçamento */
+        .budget-row {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .budget-row .value { color: var(--text-main); font-weight: 500; cursor: pointer; }
+
+        /* Caixa de Total */
+        .total-box {
+            background-color: var(--primary-light);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .total-box .total-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .total-box h1 {
+            margin: 10px 0 15px 0;
+            font-size: 28px;
+            text-align: right;
+            color: var(--text-main);
+        }
+        
+        /* Barra de Progresso */
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: var(--green);
+            width: 0%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* Info Restante */
+        .remaining-info { margin-bottom: 10px; }
+        .remaining-info .title {
+            color: var(--green);
+            font-weight: 600;
+            font-size: 15px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .remaining-info .details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Botões */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        .btn-black { background-color: var(--primary-black); color: white; }
+        .btn-light { background-color: var(--primary-light); color: var(--text-main); border: 1px solid var(--border); }
+        .btn-text { background-color: transparent; color: var(--text-muted); font-size: 14px; }
+        
+        #cameraInput { display: none; }
+
+        /* Lista do Carrinho */
+        .cart-title { margin: 20px 0 10px; font-size: 16px; font-weight: 600; }
+        .cart-list { list-style: none; padding: 0; margin: 0; }
+        .cart-item {
+            display: flex;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .cart-item-img {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-light);
+            border-radius: 8px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .cart-item-details { flex-grow: 1; }
+        .cart-item-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .cart-item-price-unit {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        .cart-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-muted);
+        }
+        .control-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: white;
+            color: var(--text-main);
+        }
+        
+        /* Modal Adicionar Produto */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            box-sizing: border-box;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .modal-header h3 { margin: 0 0 5px 0; font-size: 18px; }
+        .modal-header p { margin: 0; font-size: 13px; color: var(--text-muted); }
+        .modal-close { position: absolute; right: 0; top: 0; cursor: pointer; color: var(--text-muted); font-size: 20px;}
+        
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 5px; }
+        .input-group input[type="text"], .input-group input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background-color: var(--primary-light);
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+        
+        .loading-input { color: #007bff; font-style: italic; }
+
+        .radio-group { display: flex; gap: 20px; margin-bottom: 15px; font-size: 14px; }
+        .radio-group label { display: flex; align-items: center; gap: 5px; }
+        
+        .row-inputs { display: flex; gap: 15px; }
+        .row-inputs .input-group { flex: 1; }
+        
+        .modal-subtotal { text-align: center; font-size: 24px; font-weight: bold; margin: 20px 0; }
+        
+        .loader {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-black);
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+            display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .highlight-msg { color: #ff9500; font-weight: bold; }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        Sua compra <span>×</span>
+    </div>
+
+    <div class="content">
+        <div class="budget-row">
+            <span>Orçamento</span>
+            <span class="value" onclick="editBudget()">R$ <span id="valBudget">300,00</span> ✏️</span>
+        </div>
+
+        <div class="total-box">
+            <div class="total-header">Total no carrinho</div>
+            <h1 id="valTotal">R$ 0,00</h1>
+            
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <div class="remaining-info">
+                <span class="title" id="valRemainingTitle">Ainda pode gastar R$ 300,00</span>
+                <div class="details">
+                    <span>Orçamento: R$ <span id="valBudgetSub">300,00</span></span>
+                    <span id="valPercentage">0% usado</span>
+                </div>
+            </div>
+        </div>
+
+        <label for="cameraInput" class="btn btn-black">
+            📷 Escanear preço
+        </label>
+        <input type="file" id="cameraInput" accept="image/*" capture="environment">
+
+        <button class="btn btn-light" onclick="openModal('', '', 1)">
+            + Adicionar manualmente
+        </button>
+
+        <h3 class="cart-title">Seu carrinho</h3>
+        <ul class="cart-list" id="cartList"></ul>
+        
+        <div style="margin-top: 30px;">
+            <button class="btn btn-black">✔ Finalizar compra</button>
+            <button class="btn btn-text" style="color: var(--red);">Cancelar compra</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Adicionar Produto -->
+<div class="modal-overlay" id="modalAdd">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><div class="loader" id="modalLoader"></div>Adicionar produto</h3>
+            <p id="modalSubtitle">Confirme os dados. Ajuste se precisar.</p>
+            <span class="modal-close" onclick="closeModal()">×</span>
+        </div>
+
+        <div class="input-group">
+            <label>Nome do produto</label>
+            <input type="text" id="modalName" placeholder="Ex: MAIONESE HEINZ TRAD PET 400G">
+        </div>
+
+        <div class="input-group">
+            <label>Como contar este produto?</label>
+            <div class="radio-group">
+                <label><input type="radio" name="countType" checked> Por unidade</label>
+                <label><input type="radio" name="countType"> Por peso</label>
+            </div>
+        </div>
+
+        <div class="row-inputs">
+            <div class="input-group">
+                <label>Preço unitário (R$)</label>
+                <input type="number" id="modalPrice" step="0.01" placeholder="0.00" oninput="calcModalSubtotal()">
+            </div>
+            <div class="input-group">
+                <label>Quantidade</label>
+                <input type="number" id="modalQty" value="1" min="1" oninput="calcModalSubtotal()">
+            </div>
+        </div>
+
+        <div class="modal-subtotal" id="modalTotal">R$ 0,00</div>
+
+        <button class="btn btn-black" id="btnAddCart" onclick="confirmAddProduct()">Adicionar ao carrinho</button>
+        <button class="btn btn-text" onclick="closeModal()">Cancelar</button>
+    </div>
+</div>
+
+<script>
+    let budget = 300.00;
+    let cart = [];
+
+    function formatMoney(value) {
+        return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function editBudget() {
+        let newBudget = prompt("Digite o novo valor do orçamento (ex: 150.50):", budget);
+        if (newBudget !== null) {
+            let parsed = parseFloat(newBudget.replace(',', '.'));
+            if (!isNaN(parsed)) {
+                budget = parsed;
+                updateUI();
+            }
+        }
+    }
+
+    function updateUI() {
+        let totalSpent = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+        let remaining = budget - totalSpent;
+        let percentage = (budget > 0) ? Math.min(100, Math.round((totalSpent / budget) * 100)) : 0;
+
+        document.getElementById('valBudget').innerText = formatMoney(budget);
+        document.getElementById('valBudgetSub').innerText = formatMoney(budget);
+        document.getElementById('valTotal').innerText = `R$ ${formatMoney(totalSpent)}`;
+        
+        let remainingTitle = document.getElementById('valRemainingTitle');
+        let progressBar = document.getElementById('progressBar');
+        
+        if (remaining >= 0) {
+            remainingTitle.innerText = `Ainda pode gastar R$ ${formatMoney(remaining)}`;
+            remainingTitle.style.color = 'var(--green)';
+            progressBar.style.backgroundColor = 'var(--green)';
+        } else {
+            remainingTitle.innerText = `Orçamento estourado em R$ ${formatMoney(Math.abs(remaining))}`;
+            remainingTitle.style.color = 'var(--red)';
+            progressBar.style.backgroundColor = 'var(--red)';
+        }
+
+        document.getElementById('valPercentage').innerText = `${percentage}% usado`;
+        progressBar.style.width = `${percentage}%`;
+
+        renderCart();
+    }
+
+    function renderCart() {
+        const list = document.getElementById('cartList');
+        list.innerHTML = '';
+        
+        cart.forEach((item, index) => {
+            let itemTotal = item.price * item.qty;
+            let li = document.createElement('li');
+            li.className = 'cart-item';
+            li.innerHTML = `
+                <div class="cart-item-img">🛒</div>
+                <div class="cart-item-details">
+                    <div class="cart-item-title">
+                        <span>${item.name}</span>
+                        <span>R$ ${formatMoney(itemTotal)}</span>
+                    </div>
+                    <div class="cart-item-price-unit">R$ ${formatMoney(item.price)} cada</div>
+                    <div class="cart-controls">
+                        <div class="control-btn" onclick="changeQty(${index}, -1)">-</div>
+                        <span>${item.qty}</span>
+                        <div class="control-btn" onclick="changeQty(${index}, 1)">+</div>
+                        <span style="margin-left:auto; font-size:16px; cursor:pointer;" onclick="removeItem(${index})">🗑️</span>
+                    </div>
+                </div>
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    function changeQty(index, delta) {
+        if (cart[index].qty + delta > 0) {
+            cart[index].qty += delta;
+            updateUI();
+        }
+    }
+
+    function removeItem(index) {
+        cart.splice(index, 1);
+        updateUI();
+    }
+
+    function openModal(name = '', price = '', qty = 1) {
+        document.getElementById('modalName').value = name;
+        document.getElementById('modalPrice').value = price;
+        document.getElementById('modalQty').value = qty;
+        
+        document.getElementById('modalName').classList.remove('loading-input');
+        document.getElementById('modalLoader').style.display = 'none';
+        document.getElementById('modalSubtitle').innerText = "Confirme os dados lidos da etiqueta. Ajuste se precisar.";
+        document.getElementById('modalSubtitle').className = "";
+        document.getElementById('btnAddCart').disabled = false;
+
+        calcModalSubtotal();
+        document.getElementById('modalAdd').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('modalAdd').classList.remove('active');
+    }
+
+    function calcModalSubtotal() {
+        let price = parseFloat(document.getElementById('modalPrice').value) || 0;
+        let qty = parseInt(document.getElementById('modalQty').value) || 0;
+        let subtotal = price * qty;
+        
+        if (isNaN(subtotal) || document.getElementById('modalPrice').value === '') {
+            document.getElementById('modalTotal').innerText = `R$ 0,00`;
+        } else {
+            document.getElementById('modalTotal').innerText = `R$ ${formatMoney(subtotal)}`;
+        }
+    }
+
+    function confirmAddProduct() {
+        let name = document.getElementById('modalName').value.trim();
+        let price = parseFloat(document.getElementById('modalPrice').value);
+        let qty = parseInt(document.getElementById('modalQty').value);
+
+        if (name && price > 0 && qty > 0) {
+            cart.push({ name, price, qty });
+            closeModal();
+            updateUI();
+        } else {
+            alert('Preencha o nome e o preço (maior que zero) antes de adicionar.');
+        }
+    }
+
+    // --- NOVA FUNÇÃO: COMPRIMIR IMAGEM ANTES DE MANDAR PARA A IA ---
+    // Isso resolve o problema do aplicativo ficar pensando infinitamente
+    function compressImage(file, callback) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Reduzir a imagem para no máximo 800px (o ideal para OCR rápido)
+                const MAX_WIDTH = 800;
+                const MAX_HEIGHT = 800;
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Devolve a imagem comprimida em formato base64
+                callback(canvas.toDataURL('image/jpeg', 0.7));
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Lógica IA e Câmera Modificada
+    const cameraInput = document.getElementById('cameraInput');
+
+    cameraInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Abre modal de loading
+        document.getElementById('modalAdd').classList.add('active');
+        document.getElementById('modalName').value = "Processando imagem...";
+        document.getElementById('modalName').classList.add('loading-input');
+        document.getElementById('modalPrice').value = "";
+        document.getElementById('modalQty').value = 1;
+        document.getElementById('modalTotal').innerText = "A calcular...";
+        document.getElementById('modalLoader').style.display = 'inline-block';
+        
+        let subtitle = document.getElementById('modalSubtitle');
+        subtitle.innerText = "A inteligência artificial está lendo a etiqueta...";
+        subtitle.className = "";
+        document.getElementById('btnAddCart').disabled = true;
+
+        // 1. Primeiro comprime a imagem da câmera
+        compressImage(file, function(compressedImage) {
+            
+            document.getElementById('modalName').value = "Extraindo dados com IA...";
+
+            // 2. Depois manda a imagem levinha para o Tesseract
+            Tesseract.recognize(compressedImage, 'por').then(({ data: { text } }) => {
+                const priceRegex = /\d+[.,]\d{2}/;
+                const priceMatch = text.match(priceRegex);
+                let priceStr = priceMatch ? priceMatch[0].replace(',', '.') : '';
+                
+                let cleanText = text.replace(priceRegex, '').replace(/[^a-zA-ZÀ-ÿ\s]/g, ' ').trim();
+                let words = cleanText.split(' ').filter(w => w.length > 2);
+                let nameStr = words.slice(0, 4).join(' ').toUpperCase();
+                
+                if (!nameStr) nameStr = "PRODUTO LIDO";
+                
+                document.getElementById('modalName').value = nameStr;
+                document.getElementById('modalName').classList.remove('loading-input');
+                document.getElementById('modalPrice').value = priceStr;
+                document.getElementById('modalLoader').style.display = 'none';
+                document.getElementById('btnAddCart').disabled = false;
+                
+                if (priceStr === '') {
+                    subtitle.innerText = "Nome encontrado! Digite o preço manualmente.";
+                    subtitle.className = "highlight-msg"; 
+                    document.getElementById('modalPrice').focus(); 
+                } else {
+                    subtitle.innerText = "Leitura concluída! Confirme os dados abaixo.";
+                }
+                
+                calcModalSubtotal(); 
+                cameraInput.value = ""; 
+
+            }).catch(err => {
+                console.error(err);
+                document.getElementById('modalName').value = "";
+                document.getElementById('modalName').classList.remove('loading-input');
+                document.getElementById('modalLoader').style.display = 'none';
+                
+                subtitle.innerText = "Falha ao ler a imagem. Por favor, preencha manualmente.";
+                subtitle.className = "highlight-msg";
+                
+                document.getElementById('btnAddCart').disabled = false;
+            });
+        });
+    });
+
+    updateUI();
+</script>
+
+</body>
+</html>
